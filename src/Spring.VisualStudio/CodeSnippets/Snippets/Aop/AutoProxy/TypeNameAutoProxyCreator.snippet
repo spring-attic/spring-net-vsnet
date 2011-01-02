@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippet Format="1.0.0" xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <Header>
+    <Title>TypeNameAutoProxyCreator</Title>
+    <Author>Bruno Baia</Author>
+    <Shortcut>TypeNameAutoProxyCreator</Shortcut>
+    <Description>Auto-proxy based on type names</Description>
+    <SnippetTypes>
+      <SnippetType>Expansion</SnippetType>
+    </SnippetTypes>
+  </Header>
+  <Snippet>
+    <Declarations>
+      <Literal>
+        <ID>typeNames</ID>
+        <ToolTip>Type names</ToolTip>
+      </Literal>
+      <Literal>
+        <ID>interceptorNames</ID>
+        <ToolTip>Interceptor names</ToolTip>
+      </Literal>
+    </Declarations>
+    <Code Language="Spring">
+      <![CDATA[<object type="Spring.Aop.Framework.AutoProxy.TypeNameAutoProxyCreator, Spring.Aop">
+    <property name="TypeNames">
+      <list>
+        <value>$typeNames$</value>
+      </list>
+    </property>
+    <property name="InterceptorNames">
+      <list>
+        <value>$interceptorNames$</value>
+      </list>
+    </property>
+  </object>]]>
+    </Code>
+  </Snippet>
+</CodeSnippet>
