@@ -1,0 +1,203 @@
+<?xml version="1.0" ?>
+<project name="Spring.VisualStudio" default="build" xmlns="http://nant.sf.net/release/0.91-alpha2/nant.xsd">
+   
+  <property name="datetime.now" value="${datetime::now()}" />
+
+  <property name="product.name" value="Spring.NET Visual Studio 2010 Extension" />
+  <property name="product.company" value="SpringSource" />
+  <property name="product.copyright" value="Copyright 2004-${datetime::get-year(datetime.now)} ${product.company}" />
+  <property name="product.url" value="http://www.springframework.net/" />
+  <property name="product.description" value="An extension with intellisence assistance in authoring Spring XML configuration files in VS.NET 2010" />
+  
+  <property name="product.version" value="1.0.0" />
+  <!-- Update ${product.code} when ${product.version} changes -->
+  <property name="product.code" value="13b72b8a-bc63-46e1-aad9-68d532270f66" />
+  <!-- alpha / beta# / rc# -->
+  <property name="product.releasetype" value="" />
+
+  <property name="product.fullname" value="${product.name} ${product.version}" if="${(product.releasetype == '')}" />
+  <property name="product.fullname" value="${product.name} ${product.version} (${product.releasetype})" if="${(product.releasetype != '')}" />
+
+  <property name="project.buildnumber" value="${math::abs(math::floor(timespan::get-total-days(datetime::now() - datetime::parse('01/01/2010'))))}" />
+  <property name="project.version" value="${product.version}.${project.buildnumber}" overwrite="false" />
+  <property name="project.buildconfiguration" value="Debug" />
+  <property name="project.buildtype" value="dev" />
+  
+  <readregistry property="net40.install.dir" key="SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\InstallPath" hive="LocalMachine" failonerror="true" />
+  <property name="msbuild.exe" value="${net40.install.dir}\msbuild.exe" />
+
+  <property name="root.dir" value="${project::get-base-directory()}" />
+  <property name="build.dir" value="${root.dir}/build" />
+  <property name="package.dir" value="${root.dir}/package" />
+  <property name="doc.dir" value="${root.dir}/doc" />
+  <property name="setup.dir" value="${root.dir}/setup" />
+
+  <!-- MAIN TARGETS -->
+  
+  <target name="build">
+    <echo message="Current .NET Framework = ${nant.settings.currentframework}" />
+    <call target="update-common-assemblyinfo" />
+    <call target="update-vsix-manifest" />
+    <call target="compile" />
+  </target>
+
+  <target name="daily">
+    <property name="project.buildconfiguration" value="Release" />
+    <property name="project.buildtype" value="daily" />
+    <property name="product.fullname" value="${product.name} (Daily build from ${datetime::get-month(datetime.now)}/${datetime::get-day(datetime.now)}/${datetime::get-year(datetime.now)})" />
+    <property name="project.msi-filename" value="Spring.VisualStudio-${datetime::get-year(datetime.now)}${string::pad-left(datetime::get-month(datetime.now), 2, '0')}${string::pad-left(datetime::get-day(datetime.now), 2, '0')}-${string::pad-left(datetime::get-hour(datetime.now), 2, '0')}${string::pad-left(datetime::get-minute(datetime.now), 2, '0')}.msi" />
+    <property name="project.zip-filename" value="Spring.VisualStudio-${datetime::get-year(datetime.now)}${string::pad-left(datetime::get-month(datetime.now), 2, '0')}${string::pad-left(datetime::get-day(datetime.now), 2, '0')}-${string::pad-left(datetime::get-hour(datetime.now), 2, '0')}${string::pad-left(datetime::get-minute(datetime.now), 2, '0')}.zip" />
+    
+    <call target="package-zip"/>
+  </target>
+
+  <target name="release">
+    <property name="project.buildconfiguration" value="Release" />
+    <property name="project.buildtype" value="release" />
+    <property name="project.msi-filename" value="Spring.VisualStudio-${product.version}.msi" if="${(product.releasetype == '')}" />
+    <property name="project.msi-filename" value="Spring.VisualStudio-${product.version}-${product.releasetype}.msi" if="${(product.releasetype != '')}" />
+    <property name="project.zip-filename" value="Spring.VisualStudio-${product.version}.zip" if="${(product.releasetype == '')}" />
+    <property name="project.zip-filename" value="Spring.VisualStudio-${product.version}-${product.releasetype}.zip" if="${(product.releasetype != '')}" />
+    
+    <call target="package-zip"/>
+  </target>
+
+  
+  <!-- TARGETS -->
+
+  <target name="update-common-assemblyinfo">
+    <echo message="Generating common AssemblyInfo file..." />
+    <!-- ensure src/CommonAssemblyInfo.cs is writable if it already exists -->
+    <attrib file="${root.dir}/src/CommonAssemblyInfo.cs" readonly="false" if="${file::exists('${root.dir}/src/CommonAssemblyInfo.cs')}" />
+    <!-- generate the source file holding the common assembly-level attributes -->
+    <asminfo output="${root.dir}/src/CommonAssemblyInfo.cs" language="CSharp">
+      <imports>
+        <import namespace="System" />
+        <import namespace="System.Reflection" />
+        <import namespace="System.Runtime.InteropServices" />
+      </imports>
+      <attributes>
+        <attribute type="CLSCompliantAttribute" value="false" />
+        <attribute type="ComVisibleAttribute" value="false" />
+        <attribute type="AssemblyProductAttribute" value="${product.fullname}" />
+        <attribute type="AssemblyCompanyAttribute" value="${product.url}" />
+        <attribute type="AssemblyCopyrightAttribute" value="${product.copyright}" />
+        <attribute type="AssemblyTrademarkAttribute" value="Apache License, Version 2.0" />
+        <attribute type="AssemblyCultureAttribute" value="" />
+        <attribute type="AssemblyVersionAttribute" value="${project.version}" />
+        <attribute type="AssemblyConfigurationAttribute" value="${project.buildtype}" />
+        <attribute type="AssemblyInformationalVersionAttribute" value="${project.version}; ${project.buildtype}" />
+      </attributes>
+    </asminfo>
+  </target>
+
+  <target name="update-vsix-manifest">
+    <echo message="Updating VSIX manifest file..." />
+    <xmlpoke file="${root.dir}\src\Spring.VisualStudio\source.extension.vsixmanifest" xpath="/n:Vsix/n:Identifier/n:Name" value="${product.name}">
+      <namespaces>
+        <namespace prefix="n" uri="http://schemas.microsoft.com/developer/vsx-schema/2010" />
+      </namespaces>
+    </xmlpoke>
+    <xmlpoke file="${root.dir}\src\Spring.VisualStudio\source.extension.vsixmanifest" xpath="/n:Vsix/n:Identifier/n:Version" value="${product.version}">
+      <namespaces>
+        <namespace prefix="n" uri="http://schemas.microsoft.com/developer/vsx-schema/2010" />
+      </namespaces>
+    </xmlpoke>
+    <xmlpoke file="${root.dir}\src\Spring.VisualStudio\source.extension.vsixmanifest" xpath="/n:Vsix/n:Identifier/n:Description" value="${product.description}">
+      <namespaces>
+        <namespace prefix="n" uri="http://schemas.microsoft.com/developer/vsx-schema/2010" />
+      </namespaces>
+    </xmlpoke>
+    <xmlpoke file="${root.dir}\src\Spring.VisualStudio\source.extension.vsixmanifest" xpath="/n:Vsix/n:Identifier/n:MoreInfoUrl" value="${product.url}">
+      <namespaces>
+        <namespace prefix="n" uri="http://schemas.microsoft.com/developer/vsx-schema/2010" />
+      </namespaces>
+    </xmlpoke>
+  </target>
+
+  <target name="compile">
+    <echo message="Building source solution" />
+    <exec program="${msbuild.exe}">
+      <arg value="${root.dir}\Spring.VisualStudio.sln" />
+      <arg line="/nologo" />
+      <arg line="/target:Rebuild" />
+      <arg line="/verbosity:minimal" />
+      <arg line="/property:Configuration=${project.buildconfiguration}" />
+    </exec>
+  </target>
+
+  <target name="setup" depends="compile">
+    <echo message="Building setup WiX project" />
+    <exec program="${msbuild.exe}">
+      <arg value="${setup.dir}\src\Spring.VisualStudio.wixproj" />
+      <arg line="/nologo" />
+      <arg line="/target:Rebuild" />
+      <arg line="/verbosity:minimal" />
+      <arg line="/property:Configuration=${project.buildconfiguration}" />
+      <arg line='/property:NAntRootPath="${root.dir}"' />
+      <arg line="/property:NAntProductCode=${product.code}" />
+      <arg line="/property:NAntProductVersion=${product.version}" />
+      <arg line='/property:NAntProductName="${product.name}"' />
+      <arg line='/property:NAntProductFullName="${product.fullname}"' />
+      <arg line='/property:NAntProductDescription="${product.description}"' />
+      <arg line='/property:NAntProductCompany="${product.company}"' />
+      <arg line='/property:NAntProductUrl="${product.url}"' />
+    </exec>
+  </target>
+
+  <target name="doc">
+    <echo message="Generating documentation" />
+    <nant buildfile="${doc.dir}/reference/docbook.build" target="all" />
+  </target>
+
+  <target name="package" description="Builds all modules and documentation">
+
+    <!-- clean package dir -->
+    <delete dir="${package.dir}" failonerror="true" />
+
+    <!-- build and copy setup file -->
+    <call target="package.setup" cascade="false" />
+
+    <!-- copy reference docs -->
+    <call target="package.doc" cascade="false" />
+
+    <!-- copy over readme etc. -->
+    <copy todir="${package.dir}" file="${root.dir}/readme.txt" />
+    <copy todir="${package.dir}" file="${root.dir}/license.txt" />
+    <!--<copy todir="${package.dir}" file="${root.dir}/changelog.txt" />-->
+
+  </target>
+
+  <target name="package.setup" depends="build">
+    <call target="setup" cascade="false" />
+    <if test="${not property::exists('project.msi-filename')}">
+      <fail message="The MSI file name has not been specified (property 'project.msi-filename')."/>
+    </if>
+    <echo message="Copying setup file" />
+    <copy file="${setup.dir}/src/bin/${project.buildconfiguration}/Spring.VisualStudio.msi" tofile="${package.dir}/${project.msi-filename}" verbose="true" />
+  </target>
+
+  <target name="package.doc">
+    <call target="doc" cascade="false" />
+    <echo message="Copying documentation files" />
+    <copy todir="${package.dir}/doc/reference/">
+      <fileset basedir="${doc.dir}/reference/target/">
+        <include name="**/*" />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="package-zip" depends="package" description="Build Package distribution as .zip file">
+    <if test="${not property::exists('project.zip-filename')}">
+      <fail message="The ZIP file name has not been specified (property 'project.zip-filename')."/>
+    </if>
+    <echo message="Zipping package..." />
+    <zip zipfile="${package.dir}/${project.zip-filename}">
+      <fileset basedir="${package.dir}">
+        <include name="**/*" />
+        <exclude name="*.zip" />
+      </fileset>
+    </zip>
+  </target>
+
+</project>

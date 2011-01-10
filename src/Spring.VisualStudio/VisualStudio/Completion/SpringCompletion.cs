@@ -19,9 +19,12 @@
 #endregion
 
 using System;
+using System.IO;
+using System.Windows.Media;
 
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.TextManager.Interop;
+using System.Windows.Media.Imaging;
 
 namespace Spring.VisualStudio.Completion
 {
@@ -31,13 +34,23 @@ namespace Spring.VisualStudio.Completion
     /// <author>Bruno Baia</author>
     internal class SpringCompletion : Microsoft.VisualStudio.Language.Intellisense.Completion, IComparable
     {
+        private static ImageSource SpringLeafGlyph;
+
+        static SpringCompletion()
+        {
+            using (Stream stream = typeof(SpringCompletion).Assembly.GetManifestResourceStream("Spring.Resources.SpringGlyph.ico"))
+            {
+                SpringLeafGlyph = BitmapFrame.Create(stream);
+            }
+        }
+
         internal SpringCompletion(Declaration declaration, IGlyphService glyphService)
             : base(declaration.Title)
         {
             this.DisplayText = declaration.Shortcut;
             this.InsertionText = declaration.Title;
             this.Description = declaration.Description;
-            this.IconSource = glyphService.GetGlyph(GetGroupFromDeclaration(declaration), GetScopeFromDeclaration(declaration));
+            this.IconSource = this.GetIconSource(glyphService, declaration.Type);
 
             this.DeclarationType = declaration.Type;
         }
@@ -48,19 +61,38 @@ namespace Spring.VisualStudio.Completion
             this.DisplayText = vsExpansion.shortcut;
             this.InsertionText = vsExpansion.title;
             this.Description = vsExpansion.description;
-            this.IconSource = glyphService.GetGlyph(StandardGlyphGroup.GlyphCSharpExpansion, StandardGlyphItem.GlyphItemPublic);
+            this.IconSource = this.GetIconSource(glyphService, Declaration.DeclarationType.Snippet);
 
             this.VsExpansion = vsExpansion;
         }
 
-        private StandardGlyphItem GetScopeFromDeclaration(Declaration declaration)
+        private ImageSource GetIconSource(IGlyphService glyphService, Declaration.DeclarationType declarationType)
+        {
+            switch (declarationType)
+            {
+                case Declaration.DeclarationType.Namespace:
+                case Declaration.DeclarationType.Class:
+                case Declaration.DeclarationType.Interface:
+                case Declaration.DeclarationType.Property:
+                case Declaration.DeclarationType.ConstructorArg:
+                case Declaration.DeclarationType.EnumMember:
+                    return glyphService.GetGlyph(GetGroupFromDeclaration(declarationType), GetScopeFromDeclaration(declarationType));
+                case Declaration.DeclarationType.Snippet:
+                case Declaration.DeclarationType.Alias:
+                    return SpringLeafGlyph;
+                default:
+                    return glyphService.GetGlyph(StandardGlyphGroup.GlyphGroupClass, StandardGlyphItem.GlyphItemPublic);
+            }
+        }
+
+        private StandardGlyphItem GetScopeFromDeclaration(Declaration.DeclarationType declarationType)
         {
             return StandardGlyphItem.GlyphItemPublic;
         }
 
-        private StandardGlyphGroup GetGroupFromDeclaration(Declaration declaration)
+        private StandardGlyphGroup GetGroupFromDeclaration(Declaration.DeclarationType declarationType)
         {
-            switch (declaration.Type)
+            switch (declarationType)
             {
                 case Declaration.DeclarationType.Namespace:
                     return StandardGlyphGroup.GlyphGroupNamespace;

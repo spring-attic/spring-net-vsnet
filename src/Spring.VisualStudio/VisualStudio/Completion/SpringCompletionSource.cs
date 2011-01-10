@@ -175,9 +175,9 @@ namespace Spring.VisualStudio.Completion
             if (!attrValue.Contains('.'))
             {
                 declarations.AddRange(GetSpringAliasesDeclarations());
+                //declarations.AddRange(GetReferencesDeclarations(addInterfaces));
             }
             declarations.AddRange(GetProjectDeclarations(attrValue, addInterfaces));
-            //declarations.AddRange(GetReferencesDeclarations(addInterfaces));
 
             completionSets.Add(GetCompletions(declarations, session, false));
         }

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="$(var.ProductCode)" Name="$(var.ProductFullName)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.ProductCompany)" UpgradeCode="84e1611f-5ee0-46a8-bef2-4a64c284247c">
+		<Package InstallerVersion="200" Compressed="yes" Comments="$(var.ProductDescription)" />
+
+		<Media Id="1" Cabinet="Spring.VisualStudio.cab" EmbedCab="yes" />
+
+    <MajorUpgrade DowngradeErrorMessage="A later version of this Product is already installed. Setup will now exit." />
+    
+
+    <Property Id="VSROOTREG">
+      <RegistrySearch Id="VSRootRegistry" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\10.0\Setup\VS" Name="ProductDir" Type="directory" />
+    </Property>
+    <Property Id="VSINSTALLREG">
+      <RegistrySearch Id="VSInstallRegistry" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\10.0" Name="InstallDir" Type="directory" />
+    </Property>
+    <!-- Install for all users -->
+    <Property Id="ALLUSERS">2</Property>
+    <!-- Add/Remove Programs properties -->
+    <Property Id="ARPPRODUCTICON">Product.ico</Property>
+    <Property Id="ARPURLINFOABOUT"><![CDATA[$(var.ProductUrl)]]></Property>
+
+    
+    <!-- Launch conditions -->
+    <Condition Message="This setup requires Microsoft Visual Studio 2010.">VSINSTALLREG OR Installed</Condition>
+
+    
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      
+      <Directory Id="VSINSTALLDIR" Name="VsInstallDir">
+        <!-- Extension install folder (All Users) -->
+        <Directory Id="ExtensionsDirectory" Name="Extensions">
+          <Directory Id="CompanyDirectoryr" Name="$(var.ProductCompany)">
+            <Directory Id="ProductNameDirectory" Name="$(var.ProductName)">
+              <Directory Id="VSEXTENSIONDIR" Name="$(var.ProductVersion)">
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <Directory Id="VSROOTDIR" Name="VsRootDir">
+        <!-- Xml schemas install folder -->
+        <Directory Id="XmlDirectory" Name="Xml">
+          <Directory Id="VSSCHEMASDIR" Name="Schemas">
+          </Directory>
+        </Directory>
+      </Directory>
+      
+    </Directory>
+
+
+    
+    <CustomAction Id="CA_VSROOTDIR" Return="check" Execute="firstSequence" Property="VSROOTDIR" Value="[VSROOTREG]" />
+    <CustomAction Id="CA_VSINSTALLDIR" Return="check" Execute="firstSequence" Property="VSINSTALLDIR" Value="[VSINSTALLREG]" />
+
+    
+		<Feature Id="ProductFeature" Title="$(var.ProductName)" Level="1">
+      <ComponentGroupRef Id="Extension"/>
+      <ComponentGroupRef Id="Schemas"/>
+		</Feature>
+
+    
+    <InstallUISequence>
+      <LaunchConditions After="AppSearch" />
+      <Custom Action="CA_VSROOTDIR" After="ValidateProductID">VSROOTDIR=""</Custom>
+      <Custom Action="CA_VSINSTALLDIR" After="CA_VSROOTDIR">VSINSTALLDIR=""</Custom>
+    </InstallUISequence>
+    
+    <InstallExecuteSequence>
+      <LaunchConditions After="AppSearch" />
+      <Custom Action="CA_VSROOTDIR" After="ValidateProductID">VSROOTDIR=""</Custom>
+      <Custom Action="CA_VSINSTALLDIR" After="CA_VSROOTDIR">VSINSTALLDIR=""</Custom>
+    </InstallExecuteSequence>
+
+    <Icon Id="Product.ico" SourceFile="Resources\Product.ico" />
+    
+	</Product>
+</Wix>

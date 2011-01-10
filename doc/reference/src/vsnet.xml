@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="vsnet">
+  <title>Using Spring.NET Visual Studio Extension</title>
+
+  <para>
+    The Extension Provides intellisence assistance in authoring Spring XML configuration files in Visual Studio .NET 2010.
+  </para>
+  
+  <sect1>
+    <title>Title 'Section 1'</title>
+
+    <para></para>
+  </sect1>
+
+  <sect1>
+    <title>Title 'Section 2'</title>
+
+    <para></para>
+  </sect1>
+
+</chapter>
