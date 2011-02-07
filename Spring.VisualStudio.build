@@ -14,7 +14,6 @@
   <property name="product.code" value="13b72b8a-bc63-46e1-aad9-68d532270f66" />
   <!-- alpha / beta# / rc# -->
   <property name="product.releasetype" value="" />
-
   <property name="product.fullname" value="${product.name} ${product.version}" if="${(product.releasetype == '')}" />
   <property name="product.fullname" value="${product.name} ${product.version} (${product.releasetype})" if="${(product.releasetype != '')}" />
 

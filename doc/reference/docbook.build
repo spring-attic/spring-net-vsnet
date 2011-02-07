@@ -12,34 +12,42 @@
     <echo message=" pdf" />
     <echo message=" clean-all" />
   </target>
-  
-  <target name="all" depends="clean-all,html,html-help,pdf" />
+
+  <target name="all" depends="clean-all,update-index,html,html-help,pdf" />
 
   <target name="update-index">
     <echo message="Updating DocBook 'index.xml' file..." />
-    <xmlpoke file="${project.basedir}\src\index.xml" xpath="/n:book/n:bookinfo/n:title" value="${product.name}">
-      <namespaces>
-        <namespace prefix="n" uri="http://docbook.org/ns/docbook" />
-      </namespaces>
-    </xmlpoke>
-    <xmlpoke file="${project.basedir}\src\index.xml" xpath="/n:book/n:bookinfo/n:releaseinfo" value="${product.version}">
-      <namespaces>
-        <namespace prefix="n" uri="http://docbook.org/ns/docbook" />
-      </namespaces>
-    </xmlpoke>
-    <xmlpoke file="${project.basedir}\src\index.xml" xpath="/n:book/n:bookinfo/n:copyright" value="${product.copyright}">
-      <namespaces>
-        <namespace prefix="n" uri="http://docbook.org/ns/docbook" />
-      </namespaces>
-    </xmlpoke>
-    <xmlpoke file="${project.basedir}\src\index.xml" xpath="/n:book/n:bookinfo/n:pubdate" value="Last Updated ${datetime::get-month(datetime.now)}/${datetime::get-day(datetime.now)}/${datetime::get-year(datetime.now)}">
-      <namespaces>
-        <namespace prefix="n" uri="http://docbook.org/ns/docbook" />
-      </namespaces>
-    </xmlpoke>
+    <if test="${property::exists('product.name')}">
+      <xmlpoke file="${project.basedir}\src\index.xml" xpath="/n:book/n:bookinfo/n:title" value="${product.name}">
+        <namespaces>
+          <namespace prefix="n" uri="http://docbook.org/ns/docbook" />
+        </namespaces>
+      </xmlpoke>
+    </if>
+    <if test="${property::exists('product.version')}">
+      <xmlpoke file="${project.basedir}\src\index.xml" xpath="/n:book/n:bookinfo/n:releaseinfo" value="${product.version}">
+        <namespaces>
+          <namespace prefix="n" uri="http://docbook.org/ns/docbook" />
+        </namespaces>
+      </xmlpoke>
+    </if>
+    <if test="${property::exists('product.copyright')}">
+      <xmlpoke file="${project.basedir}\src\index.xml" xpath="/n:book/n:bookinfo/n:copyright" value="${product.copyright}">
+        <namespaces>
+          <namespace prefix="n" uri="http://docbook.org/ns/docbook" />
+        </namespaces>
+      </xmlpoke>
+    </if>
+    <if test="${property::exists('datetime.now')}">
+      <xmlpoke file="${project.basedir}\src\index.xml" xpath="/n:book/n:bookinfo/n:pubdate" value="Last Updated ${datetime::get-month(datetime.now)}/${datetime::get-day(datetime.now)}/${datetime::get-year(datetime.now)}">
+        <namespaces>
+          <namespace prefix="n" uri="http://docbook.org/ns/docbook" />
+        </namespaces>
+      </xmlpoke>
+    </if>
   </target>
 
-  <target name="html" depends="update-index">
+  <target name="html">
     <echo message="Generating HTML format..." />
     <mkdir dir="${project.targetdir}" />
     <!-- docbook -> html -->
@@ -66,7 +74,7 @@
     </copy>
   </target>
 
-  <target name="html-help" depends="update-index">
+  <target name="html-help">
     <echo message="Generating HTML Help format..." />
     <mkdir dir="${project.targetdir}" />
     <!-- copy css to html dir -->
@@ -89,18 +97,15 @@
         <include name="**" />
       </fileset>
     </copy>
-
     <!-- docbook -> HTML Help Workshop project (.hhp) -->
     <exec workingdir="${project.targetdir}" program="java" commandline='-cp "..\lib\saxon6-5-5\saxon.jar;..\lib\xslthl-2.0.0\xslthl-2.0.0.jar" com.icl.saxon.StyleSheet ../src/index.xml "..\lib\docbook-xsl-snapshot\htmlhelp\springnet.xsl" highlight.xslthl.config="file:///${project.basedir}/lib/docbook-xsl-snapshot/highlighting/xslthl-config.xml"' />
     <!-- HTML Help Workshop project (.hhp) -> HTML Help file (.chm) -->
-        <property name="hhc.path" value="c:\Program Files\HTML Help Workshop" />
-		
-	<if test="${not directory::exists(hhc.path)}">
-		<readregistry property="hhc.path" key="SOFTWARE\Microsoft\HTML Help Workshop\InstallDir" hive="CurrentUser" />
-	</if>
-    <exec program="${hhc.path}\hhc.exe" commandline="${project.targetdir}\htmlhelp\htmlhelp.hhp" failonerror="false" />
+    <property name="hhc.path" value="c:\Program Files\HTML Help Workshop" />
+    <if test="${not directory::exists(hhc.path)}">
+      <readregistry property="hhc.path" key="SOFTWARE\Microsoft\HTML Help Workshop\InstallDir" hive="CurrentUser" />
+    </if>
+    <exec program="${hhc.path}\hhc.exe" commandline="${project.targetdir}\htmlhelp\htmlhelp.hhp" failonerror="false" />  
     <!-- cleanup -->
-
     <delete>
       <fileset basedir="${project.targetdir}\htmlhelp" >
         <include name="**/**" />
@@ -112,7 +117,7 @@
 	  tofile="${project.targetdir}\htmlhelp\spring-vsnet-reference.chm" verbose="true" />
   </target>
 
-  <target name="pdf" depends="update-index">
+  <target name="pdf">
     <echo message="Generating PDF format..." />
     <mkdir dir="${project.targetdir}" />
     <!-- docbook -> fop -->
