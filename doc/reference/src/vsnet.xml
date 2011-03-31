@@ -5,17 +5,28 @@
   <para>
     The Extension Provides intellisence assistance in authoring Spring XML configuration files in Visual Studio .NET 2010.
   </para>
-  
-  <sect1>
-    <title>Title 'Section 1'</title>
 
-    <para></para>
-  </sect1>
-
-  <sect1>
-    <title>Title 'Section 2'</title>
-
-    <para></para>
-  </sect1>
+  <para>
+    <itemizedlist>
+      <listitem>
+        Type completion
+      </listitem>
+      <listitem>
+        Property name completion
+      </listitem>
+      <listitem>
+        Constructor argument name completion
+      </listitem>
+      <listitem>
+        Property value completion for property of type 'Type', 'Enum' and 'Boolean'
+      </listitem>
+      <listitem>
+        Snippets integration (inline or by menu)
+      </listitem>
+      <listitem>
+        Quickinfo tooltip for properties and types
+      </listitem>      
+    </itemizedlist>
+  </para>
 
 </chapter>
