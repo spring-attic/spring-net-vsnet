@@ -1,5 +1,5 @@
-Spring.NET Visual Studio 2010 Extension, Release 1.0.0 (Date TBD)
------------------------------------------------------------------
+Spring.NET Visual Studio 2010 Extension, Release 1.0.0 (April 1, 2011)
+----------------------------------------------------------------------
 https://github.com/SpringSource/spring-net-vsnet
 
 
