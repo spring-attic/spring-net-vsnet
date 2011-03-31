@@ -162,7 +162,7 @@ namespace Spring.VisualStudio.Completion
             List<Declaration> declarations = new List<Declaration>();
 
             IVsTextManager2 expansionManager = (IVsTextManager2)this.serviceProvider.GetService(typeof(SVsTextManager));
-            SnippetsEnumerator snippetsEnumerator = new SnippetsEnumerator(expansionManager, GuidList.guidSpringLanguage);
+            SnippetsEnumerable snippetsEnumerator = new SnippetsEnumerable(expansionManager, GuidList.guidSpringLanguage);
             declarations.AddRange(snippetsEnumerator.Select(expansion => new Declaration(expansion.shortcut, expansion.title, Declaration.DeclarationType.Snippet, expansion.description)));
 
             completionSets.Add(GetCompletions(declarations, session, true));

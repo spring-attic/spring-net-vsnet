@@ -35,7 +35,7 @@ namespace Spring.VisualStudio.Completion
     /// Enumerates the code snippets of Spring
     /// </summary>
     /// <author>Bruno Baia</author>
-    internal class SnippetsEnumerator : IEnumerable<VsExpansion>
+    internal class SnippetsEnumerable : IEnumerable<VsExpansion>
     {
         /// <summary>
         /// This structure is used to facilitate the interop calls to the method
@@ -60,7 +60,7 @@ namespace Spring.VisualStudio.Completion
         /// <param name="languageGuid">
         /// This is the language service GUID for which you want to enumerate snippets (Spring in our case)
         /// </param>
-        public SnippetsEnumerator(IVsTextManager2 textManager, Guid languageGuid)
+        public SnippetsEnumerable(IVsTextManager2 textManager, Guid languageGuid)
         {
             if (null == textManager)
             {

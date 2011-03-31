@@ -251,7 +251,7 @@ namespace Spring.VisualStudio.Completion
                 if (completionSession == null && (nCmdID == (uint)VSConstants.VSStd2KCmdID.TAB))
                 {
                     IVsTextManager2 expansionManager = (IVsTextManager2)this.serviceProvider.GetService(typeof(SVsTextManager));
-                    SnippetsEnumerator snippetsEnumerator = new SnippetsEnumerator(expansionManager, GuidList.guidSpringLanguage);
+                    SnippetsEnumerable snippetsEnumerator = new SnippetsEnumerable(expansionManager, GuidList.guidSpringLanguage);
 
                     SnapshotPoint currentPoint = (this.textView.Caret.Position.BufferPosition) - 1;
                     ITextStructureNavigator navigator = this.textStructureNavigatorSelectorService.GetTextStructureNavigator(this.textView.TextBuffer);

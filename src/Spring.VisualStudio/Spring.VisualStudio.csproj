@@ -103,7 +103,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="VisualStudio\Completion\Declaration.cs" />
-    <Compile Include="VisualStudio\Completion\SnippetsEnumerator.cs" />
+    <Compile Include="VisualStudio\Completion\SnippetsEnumerable.cs" />
     <Compile Include="VisualStudio\Completion\SpringCompletion.cs" />
     <Compile Include="VisualStudio\Completion\SpringCompletionController.cs" />
     <Compile Include="VisualStudio\Completion\SpringCompletionControllerProvider.cs" />
