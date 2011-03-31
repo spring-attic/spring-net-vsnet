@@ -150,7 +150,13 @@ namespace Spring.VisualStudio.QuickInfo
                 CodeType codeType = prj.CodeModel.CodeTypeFromFullName(typeName.Split(',')[0]);
                 if (codeType != null)
                 {
-                    return codeType.DocComment;
+                    string comment = String.Empty;
+                    try
+                    {
+                        comment = GetSummaryFromComment(codeType.DocComment);
+                    }
+                    catch (Exception) { }
+                    return comment;
                 }
             }
             return null;
@@ -169,7 +175,13 @@ namespace Spring.VisualStudio.QuickInfo
                     {
                         if (cp.Name.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase))
                         {
-                            return cp.DocComment;
+                            string comment = String.Empty;
+                            try
+                            {
+                                comment = GetSummaryFromComment(cp.DocComment);
+                            }
+                            catch (Exception) { }
+                            return comment;
                         }
                     }
                 }
@@ -200,6 +212,17 @@ namespace Spring.VisualStudio.QuickInfo
             }
 
             return properties;
+        }
+
+        private static string GetSummaryFromComment(string comment)
+        {
+            if (!String.IsNullOrWhiteSpace(comment))
+            {
+                System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
+                xmlDoc.LoadXml(comment);
+                return xmlDoc.SelectSingleNode("//summary").InnerXml.Trim();
+            }
+            return String.Empty;
         }
     }
 }

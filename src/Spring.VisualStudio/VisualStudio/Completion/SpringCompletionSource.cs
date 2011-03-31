@@ -500,14 +500,13 @@ namespace Spring.VisualStudio.Completion
 
         private static string GetSummaryFromComment(string comment)
         {
-            //return comment;
             if (!String.IsNullOrWhiteSpace(comment))
             {
                 try
                 {
                     System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
                     xmlDoc.LoadXml(comment);
-                    return xmlDoc.SelectSingleNode("//summary").InnerText.Trim();
+                    return xmlDoc.SelectSingleNode("//summary").InnerXml.Trim();
                 }
                 catch (Exception)
                 {
