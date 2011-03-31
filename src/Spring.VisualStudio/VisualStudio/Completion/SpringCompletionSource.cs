@@ -84,7 +84,9 @@ namespace Spring.VisualStudio.Completion
             {
                 if (nf.Scope.NamespaceURI.Equals("http://www.springframework.net", StringComparison.OrdinalIgnoreCase))
                 {
-                    this.AddSnippetsCompletionSets(session, completionSets);
+                    completionSets.Add(CreateCompletionSet(
+                           this.GetSnippetsCompletions(),
+                           session, true));
                 }
             }
             else if (nf.Scope is XmlAttribute)
@@ -100,7 +102,8 @@ namespace Spring.VisualStudio.Completion
                 {
                     if (attr.LocalName.EndsWith("type", StringComparison.OrdinalIgnoreCase))
                     {
-                        this.AddTypeCompletionSets(session, completionSets, attr.Value.Value, false);
+                        completionSets.Add(CreateCompletionSet(
+                            GetTypeCompletions(attr.Value.Value, false), session, false));
                     }
                     else if (attr.LocalName.Equals("name", StringComparison.OrdinalIgnoreCase) &&
                         elt.LocalName.Equals("property", StringComparison.OrdinalIgnoreCase))
@@ -111,7 +114,8 @@ namespace Spring.VisualStudio.Completion
                             string typeName = elt2.GetAttribute("type");
                             if (!String.IsNullOrWhiteSpace(typeName))
                             {
-                                this.AddTypePropertiesCompletionSets(session, completionSets, typeName);
+                                completionSets.Add(CreateCompletionSet(
+                                    GetTypePropertyCompletions(typeName), session, false));
                             }
                         }
                     }
@@ -124,7 +128,8 @@ namespace Spring.VisualStudio.Completion
                             string typeName = elt2.GetAttribute("type");
                             if (!String.IsNullOrWhiteSpace(typeName))
                             {
-                                this.AddTypeCtorNamesCompletionSets(session, completionSets, typeName);
+                                completionSets.Add(CreateCompletionSet(
+                                    GetTypeCtorsArgsNamesCompletions(typeName), session, false));
                             }
                         }
                     }
@@ -138,7 +143,8 @@ namespace Spring.VisualStudio.Completion
                             string typeName = elt2.GetAttribute("type");
                             if (!String.IsNullOrWhiteSpace(typeName) && !String.IsNullOrWhiteSpace(propertyName))
                             {
-                                this.AddPropertyValuesCompletionSets(session, completionSets, attr.Value.Value, typeName, propertyName);
+                                completionSets.Add(CreateCompletionSet(
+                                    GetTypePropertyValueCompletions(typeName, propertyName, attr.Value.Value), session, false));
                             }
                         }
                     }
@@ -156,126 +162,165 @@ namespace Spring.VisualStudio.Completion
         }
 
         #endregion
-
-        private void AddSnippetsCompletionSets(ICompletionSession session, IList<CompletionSet> completionSets)
+        
+        private IList<SpringCompletion> GetSpringAliasesCompletions()
         {
-            List<Declaration> declarations = new List<Declaration>();
+            string[] springAliases = new string[] { "int", "Integer", "int[]", "Integer()", "decimal", "Decimal", "decimal[]", 
+                "Decimal()", "char", "Char", "char[]", "Char()", "long", "Long", "long[]", "Long()", "short", "Short", "short[]", 
+                "Short()", "uint", "ulong", "ulong[]", "uint[]", "ushort", "ushort[]", "double", "Double", "double[]", "Double()", 
+                "float", "Single", "float[]", "Single()", "DateTime", "date", "Date", "DateTime[]", "date[]", "DateTime()", "bool", 
+                "Boolean", "bool[]", "Boolean()", "string", "String", "string[]", "String()", "object", "Object", "object[]", "Object()", 
+                "int?", "int?[]", "decimal?", "decimal?[]", "char?", "char?[]", "long?", "long?[]", "short?", "short?[]", "uint?", 
+                "ulong?", "ulong?[]", "uint?[]", "ushort?", "ushort?[]", "double?", "double?[]", "float?", "float?[]", "bool?", "bool?[]" };
 
-            IVsTextManager2 expansionManager = (IVsTextManager2)this.serviceProvider.GetService(typeof(SVsTextManager));
-            SnippetsEnumerable snippetsEnumerator = new SnippetsEnumerable(expansionManager, GuidList.guidSpringLanguage);
-            declarations.AddRange(snippetsEnumerator.Select(expansion => new Declaration(expansion.shortcut, expansion.title, Declaration.DeclarationType.Snippet, expansion.description)));
+            List<SpringCompletion> completions = new List<SpringCompletion>();
 
-            completionSets.Add(GetCompletions(declarations, session, true));
+            completions.AddRange(springAliases.Select(
+                alias => new SpringCompletion(this.glyphService, alias, alias, "Spring.NET standard type alias", SpringCompletionType.Alias)));
+
+            completions.Sort();
+            return completions;
         }
 
-        private void AddTypeCompletionSets(ICompletionSession session, IList<CompletionSet> completionSets, string attrValue, bool addInterfaces)
-        {
-            List<Declaration> declarations = new List<Declaration>();
-
-            if (!attrValue.Contains('.'))
-            {
-                declarations.AddRange(GetSpringAliasesDeclarations());
-            }
-            declarations.AddRange(GetProjectDeclarations(attrValue, addInterfaces));
-
-            completionSets.Add(GetCompletions(declarations, session, false));
-        }
-
-        private void AddTypeCtorNamesCompletionSets(ICompletionSession session, IList<CompletionSet> completionSets, string typeName)
+        private IEnumerable<SpringCompletion> GetTypeCompletions(string text, bool addInterfaces)
         {
             DTE dte = this.serviceProvider.GetService(typeof(DTE)) as DTE;
-            Project prj = dte.ActiveDocument.ProjectItem.ContainingProject;
-            if (prj.CodeModel != null)
+            Project project = dte.ActiveDocument.ProjectItem.ContainingProject;
+
+            List<SpringCompletion> completions = new List<SpringCompletion>();
+
+            if (!text.Contains('.'))
             {
-                CodeType codeType = prj.CodeModel.CodeTypeFromFullName(typeName.Split(',')[0]);
+                completions.AddRange(GetSpringAliasesCompletions());
+            }
 
-                if (codeType != null)
+            if (project.CodeModel != null)
+            {
+                CodeElements codeElements = GetCodeElements(text, project.CodeModel.CodeElements);
+                if (codeElements != null)
                 {
-                    IList<Declaration> declarations = new List<Declaration>();
-
-                    foreach (CodeParameter cp in GetTypeContructorsArgs(codeType))
-                    {
-                        declarations.Add(new Declaration(
-                            cp.Name,
-                            cp.Name,
-                            Declaration.DeclarationType.ConstructorArg,
-                            String.Format("{0} {1}{2}{3}", cp.Type.AsString, cp.FullName, Environment.NewLine, GetSummaryFromComment(cp.DocComment))));
-                    }
-
-                    completionSets.Add(GetCompletions(declarations, session, false));
+                    completions.AddRange(GetCodeElementsCompletions(project, codeElements, addInterfaces));
                 }
             }
-        }
 
-        private void AddTypePropertiesCompletionSets(ICompletionSession session, IList<CompletionSet> completionSets, string typeName)
+            completions.Sort();
+            return completions;
+                }
+
+        private IEnumerable<SpringCompletion> GetTypeCtorsArgsNamesCompletions(string typeName)
         {
             DTE dte = this.serviceProvider.GetService(typeof(DTE)) as DTE;
-            Project prj = dte.ActiveDocument.ProjectItem.ContainingProject;
-            if (prj.CodeModel != null)
+            Project project = dte.ActiveDocument.ProjectItem.ContainingProject;
+
+            List<SpringCompletion> completions = new List<SpringCompletion>();
+
+            if (project.CodeModel != null)
             {
-                CodeType codeType = prj.CodeModel.CodeTypeFromFullName(typeName.Split(',')[0]);
+                CodeType codeType = project.CodeModel.CodeTypeFromFullName(typeName.Split(',')[0]);
 
                 if (codeType != null)
                 {
-                    IList<Declaration> declarations = new List<Declaration>();
+                    foreach (CodeParameter cp in GetTypeCtorsArgs(codeType))
+                    {
+                        completions.Add(new SpringCompletion(
+                            this.glyphService,
+                            cp.Name,
+                            cp.Name,
+                            String.Format("{0} {1}{2}{3}", cp.Type.AsString, cp.FullName, Environment.NewLine, GetSummaryFromComment(cp.DocComment)), 
+                            SpringCompletionType.ConstructorArg));
+                    }
+                }
+            }
 
+            completions.Sort();
+            return completions;
+        }
+
+        private IEnumerable<SpringCompletion> GetTypePropertyCompletions(string typeName)
+        {
+            DTE dte = this.serviceProvider.GetService(typeof(DTE)) as DTE;
+            Project project = dte.ActiveDocument.ProjectItem.ContainingProject;
+
+            List<SpringCompletion> completions = new List<SpringCompletion>();
+
+            if (project.CodeModel != null)
+            {
+                CodeType codeType = project.CodeModel.CodeTypeFromFullName(typeName.Split(',')[0]);
+
+                if (codeType != null)
+                {
                     foreach (CodeProperty cp in GetTypeProperties(codeType))
                     {
-                        declarations.Add(new Declaration(
+                        completions.Add(new SpringCompletion(
+                            this.glyphService,
                             cp.Name,
                             cp.Name,
-                            Declaration.DeclarationType.Property,
-                            String.Format("{0} {1}{2}{3}", cp.Type.AsString, cp.FullName, Environment.NewLine, GetSummaryFromComment(cp.DocComment))));
+                            String.Format("{0} {1}.{2}{3}{4}", cp.Type.AsString, cp.Parent.Name, cp.Name, Environment.NewLine, GetSummaryFromComment(cp.DocComment)), 
+                            SpringCompletionType.Property));
                     }
-
-                    completionSets.Add(GetCompletions(declarations, session, false));
                 }
             }
+
+            completions.Sort();
+            return completions;
         }
 
-        private void AddPropertyValuesCompletionSets(ICompletionSession session, IList<CompletionSet> completionSets, string attrValue, string typeName, string propertyName)
+        private IEnumerable<SpringCompletion> GetTypePropertyValueCompletions(string typeName, string propertyName, string text)
         {
             DTE dte = this.serviceProvider.GetService(typeof(DTE)) as DTE;
-            Project prj = dte.ActiveDocument.ProjectItem.ContainingProject;
-            if (prj.CodeModel != null)
+            Project project = dte.ActiveDocument.ProjectItem.ContainingProject;
+
+            if (project.CodeModel != null)
             {
-                CodeType codeType = prj.CodeModel.CodeTypeFromFullName(typeName.Split(',')[0]);
+                CodeType codeType = project.CodeModel.CodeTypeFromFullName(typeName.Split(',')[0]);
 
                 if (codeType != null)
                 {
                     CodeProperty cp = GetTypeProperties(codeType).First<CodeProperty>(codeProp => codeProp.Name.Equals(propertyName, StringComparison.OrdinalIgnoreCase));
                     if (cp.Type.CodeType is CodeEnum)
                     {
-                        List<Declaration> declarations = new List<Declaration>();
+                        List<SpringCompletion> completions = new List<SpringCompletion>();
                         CodeEnum ce = cp.Type.CodeType as CodeEnum;
                         foreach (CodeElement ce2 in ce.Members)
                         {
                             if (ce2 is CodeVariable)
                             {
                                 CodeVariable cv = ce2 as CodeVariable;
-                                declarations.Add(new Declaration(
+                                completions.Add(new SpringCompletion(
+                                    this.glyphService, 
                                     cv.Name,
                                     cv.Name,
-                                    Declaration.DeclarationType.EnumMember,
-                                    String.Format("{0}{1}{2}", cv.FullName, Environment.NewLine, GetSummaryFromComment(cv.DocComment))));
+                                    String.Format("{0}.{1}{2}{3}", ce.Name, cv.Name, Environment.NewLine, GetSummaryFromComment(cv.DocComment)), 
+                                    SpringCompletionType.EnumMember));
                             }
                         }
-                        completionSets.Add(GetCompletions(declarations, session, false));
+                        completions.Sort();
+                        return completions;
+                    }
+                    else if (cp.Type.CodeType is CodeClass)
+                    {
+                        if (cp.Type.AsString.Equals("System.Type", StringComparison.OrdinalIgnoreCase) ||
+                            cp.Type.AsString.Equals("System.RuntimeType", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return GetTypeCompletions(text, true);
+                        }
                     }
                     else if (cp.Type.AsString.Equals("bool", StringComparison.OrdinalIgnoreCase))
                     {
-                        List<Declaration> declarations = new List<Declaration>();
-                        declarations.Add(new Declaration("true", "true", Declaration.DeclarationType.Boolean, "true"));
-                        declarations.Add(new Declaration("false", "false", Declaration.DeclarationType.Boolean, "false"));
-                        completionSets.Add(GetCompletions(declarations, session, false));
+                        List<SpringCompletion> completions = new List<SpringCompletion>();
+                        completions.Add(new SpringCompletion(this.glyphService, "true", "true", "true", SpringCompletionType.Boolean));
+                        completions.Add(new SpringCompletion(this.glyphService, "false", "false", "false", SpringCompletionType.Boolean));
+                        return completions;
                     }
-                    else if (cp.Type.AsString.Equals("System.Type", StringComparison.OrdinalIgnoreCase) ||
+                    else if (cp.Type.AsString.Equals("System.Type", StringComparison.OrdinalIgnoreCase) || 
                         cp.Type.AsString.Equals("System.RuntimeType", StringComparison.OrdinalIgnoreCase))
                     {
-                        AddTypeCompletionSets(session, completionSets, attrValue, true);
+                        return GetTypeCompletions(text, true);
                     }
                 }
             }
+
+            return new List<SpringCompletion>();
         }
 
         private static IList<CodeProperty> GetTypeProperties(CodeType codeType)
@@ -303,7 +348,7 @@ namespace Spring.VisualStudio.Completion
             return properties;
         }
 
-        private static IList<CodeParameter> GetTypeContructorsArgs(CodeType codeType)
+        private static IList<CodeParameter> GetTypeCtorsArgs(CodeType codeType)
         {
             List<CodeParameter> args = new List<CodeParameter>();
 
@@ -311,7 +356,7 @@ namespace Spring.VisualStudio.Completion
             {
                 if (ce is CodeType)
                 {
-                    args.AddRange(GetTypeContructorsArgs((CodeType)ce));
+                    args.AddRange(GetTypeCtorsArgs((CodeType)ce));
                 }
             }
             foreach (CodeElement ce in codeType.Members)
@@ -338,42 +383,6 @@ namespace Spring.VisualStudio.Completion
             return args;
         }
 
-        private static IList<Declaration> GetSpringAliasesDeclarations()
-        {
-            string[] springAliases = new string[] { "int", "Integer", "int[]", "Integer()", "decimal", "Decimal", "decimal[]", 
-                "Decimal()", "char", "Char", "char[]", "Char()", "long", "Long", "long[]", "Long()", "short", "Short", "short[]", 
-                "Short()", "uint", "ulong", "ulong[]", "uint[]", "ushort", "ushort[]", "double", "Double", "double[]", "Double()", 
-                "float", "Single", "float[]", "Single()", "DateTime", "date", "Date", "DateTime[]", "date[]", "DateTime()", "bool", 
-                "Boolean", "bool[]", "Boolean()", "string", "String", "string[]", "String()", "object", "Object", "object[]", "Object()", 
-                "int?", "int?[]", "decimal?", "decimal?[]", "char?", "char?[]", "long?", "long?[]", "short?", "short?[]", "uint?", 
-                "ulong?", "ulong?[]", "uint?[]", "ushort?", "ushort?[]", "double?", "double?[]", "float?", "float?[]", "bool?", "bool?[]" };
-
-            List<Declaration> declarations = new List<Declaration>();
-
-            declarations.AddRange(springAliases.Select(
-                alias => new Declaration(alias, alias, Declaration.DeclarationType.Alias, "Spring.NET standard type alias")));
-            
-            return declarations;
-        }
-
-        private IList<Declaration> GetProjectDeclarations(string text, bool addInterfaces)
-        {
-            List<Declaration> declarations = new List<Declaration>();
-
-            DTE dte = this.serviceProvider.GetService(typeof(DTE)) as DTE;
-            Project prj = dte.ActiveDocument.ProjectItem.ContainingProject;
-            if (prj.CodeModel != null)
-            {
-                CodeElements codeElements = GetCodeElements(text, prj.CodeModel.CodeElements);
-                if (codeElements != null)
-                {
-                    declarations.AddRange(GetCodeElementsDeclarations(prj, codeElements, addInterfaces));
-                }
-            }
-
-            return declarations;
-        }
-
         private static CodeElements GetCodeElements(string text, CodeElements codeElements)
         {
             int index = text.IndexOf('.');
@@ -394,19 +403,20 @@ namespace Spring.VisualStudio.Completion
             return null;
         }
 
-        private static IList<Declaration> GetCodeElementsDeclarations(Project prj, CodeElements codeElements, bool addInterfaces)
+        private IList<SpringCompletion> GetCodeElementsCompletions(Project prj, CodeElements codeElements, bool addInterfaces)
         {
-            List<Declaration> declarations = new List<Declaration>();
+            List<SpringCompletion> completions = new List<SpringCompletion>();
 
             foreach (CodeElement ce in codeElements)
             {
                 if (ce is CodeNamespace)
                 {
-                    declarations.Add(new Declaration(
-                            ce.Name,
-                            ce.Name,
-                            Declaration.DeclarationType.Namespace,
-                            ce.FullName));
+                    completions.Add(new SpringCompletion(
+                        this.glyphService, 
+                        ce.Name,
+                        ce.Name,
+                        ce.FullName, 
+                        SpringCompletionType.Namespace));
                 }
                 else if (ce is CodeInterface)
                 {
@@ -422,11 +432,12 @@ namespace Spring.VisualStudio.Completion
                             }
                             catch (COMException) { }
                             string assemblyName = GetAssemblyName(prj, ce);
-                            declarations.Add(new Declaration(
+                            completions.Add(new SpringCompletion(
+                                this.glyphService,
                                 ci.Name,
                                 String.Format("{0}, {1}", ci.Name, assemblyName),
-                                Declaration.DeclarationType.Interface,
-                                String.Format("{0}, {1}{2}{3}", ci.FullName, assemblyName, Environment.NewLine, GetSummaryFromComment(comment))));
+                                String.Format("{0}, {1}{2}{3}", ci.FullName, assemblyName, Environment.NewLine, GetSummaryFromComment(comment)), 
+                                SpringCompletionType.Interface));
                         }
                     }
                 }
@@ -442,17 +453,19 @@ namespace Spring.VisualStudio.Completion
                         }
                         catch (COMException) { }
                         string assemblyName = GetAssemblyName(prj, ce);
-                        declarations.Add(new Declaration(
+                        completions.Add(new SpringCompletion(
+                            this.glyphService, 
                             cc.Name,
                             String.Format("{0}, {1}", cc.Name, assemblyName),
-                            Declaration.DeclarationType.Class,
-                            String.Format("{0}, {1}{2}{3}", cc.FullName, assemblyName, Environment.NewLine, GetSummaryFromComment(comment))));
+                            String.Format("{0}, {1}{2}{3}", cc.FullName, assemblyName, Environment.NewLine, GetSummaryFromComment(comment)), 
+                            SpringCompletionType.Class));
 
                     }
                 }
             }
 
-            return declarations;
+            completions.Sort();
+            return completions;
         }
 
         private static string GetAssemblyName(Project prj, CodeElement ce)
@@ -504,21 +517,26 @@ namespace Spring.VisualStudio.Completion
             return String.Empty;
         }
 
-        private CompletionSet GetCompletions(IList<Declaration> declarations, ICompletionSession session, bool isSnippet)
+        private IEnumerable<SpringCompletion> GetSnippetsCompletions()
         {
-            // Add Spring.NET completion
             List<SpringCompletion> completions = new List<SpringCompletion>();
-            completions.AddRange(declarations.Select(declaration => new SpringCompletion(declaration, this.glyphService)));
+
+            IVsTextManager2 expansionManager = (IVsTextManager2)this.serviceProvider.GetService(typeof(SVsTextManager));
+            SnippetsEnumerable snippetsEnumerator = new SnippetsEnumerable(expansionManager, GuidList.guidSpringLanguage);
+            completions.AddRange(snippetsEnumerator.Select(vsExpansion => new SpringCompletion(this.glyphService, vsExpansion)));
 
             completions.Sort();
+            return completions;
+        }
 
-            return
-                new SpringCompletionSet("Spring.NET",
-                    "Spring.NET",
-                    isSnippet ? CreateTrackingSpanForSnippet(session) : CreateTrackingSpan(session),
-                    completions,
-                    null)
-            ;
+        private CompletionSet CreateCompletionSet(IEnumerable<SpringCompletion> completions, ICompletionSession session, bool isSnippet)
+        {
+            // Create Spring.NET completion
+            return new SpringCompletionSet("Spring.NET",
+                "Spring.NET",
+                isSnippet ? CreateTrackingSpanForSnippet(session) : CreateTrackingSpan(session),
+                completions,
+                null);
         }
 
         private ITrackingSpan CreateTrackingSpan(ICompletionSession session)

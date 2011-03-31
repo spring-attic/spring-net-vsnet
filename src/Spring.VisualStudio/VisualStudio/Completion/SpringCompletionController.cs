@@ -302,8 +302,8 @@ namespace Spring.VisualStudio.Completion
                         {
                             SpringCompletion selectedCompletion = completionSession.SelectedCompletionSet.SelectionStatus.Completion as SpringCompletion;
                             if (completionSession.SelectedCompletionSet.SelectionStatus.IsSelected &&
-                                selectedCompletion != null && selectedCompletion.DeclarationType != null && 
-                                selectedCompletion.DeclarationType.Value == Declaration.DeclarationType.Namespace)
+                                selectedCompletion != null && selectedCompletion.Type != null && 
+                                selectedCompletion.Type.Value == SpringCompletionType.Namespace)
                             {
                                 completionSession.Commit();
                             }
