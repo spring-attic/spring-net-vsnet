@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippet Format="1.0.0" xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <Header>
+    <Title>VariablePlaceholderConfigurer example</Title>
+    <Author>Bruno Baia</Author>
+    <Shortcut>VariablePlaceholderConfigurer</Shortcut>
+    <Description>Resolves placeholder values in one or more object definitions</Description>
+    <SnippetTypes>
+      <SnippetType>Expansion</SnippetType>
+    </SnippetTypes>
+  </Header>
+  <Snippet>
+    <Declarations>
+      <Literal>
+        <ID>sectionNames</ID>
+        <ToolTip>.NET configuration section names (like AppSettings) as comma-separeted list</ToolTip>
+      </Literal>
+    </Declarations>
+    <Code Language="Spring">
+      <![CDATA[<object type="Spring.Objects.Factory.Config.VariablePlaceholderConfigurer, Spring.Core">
+    <property name="VariableSources">
+      <list>
+        <object type="Spring.Objects.Factory.Config.ConfigSectionVariableSource, Spring.Core">
+          <property name="SectionNames" value="$sectionNames$" />
+        </object>
+        <!-- Other 'IVariableSource' implementations here -->
+      </list>
+    </property>
+  </object>]]>
+    </Code>
+  </Snippet>
+</CodeSnippet>
