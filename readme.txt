@@ -9,7 +9,7 @@ The 1.0.0 release of Spring.NET Visual Studio 2010 Extension provides intellisen
 	* Type completion
 	* Property name completion
 	* Constructor argument name completion
-	* Property value completion for property of type 'Type' and 'Enum'
+	* Property value completion for property of type 'Type', 'Enum' and 'Boolean'
 	* Snippets integration (inline or by menu)
 	* Quickinfo tooltip for properties and types
 

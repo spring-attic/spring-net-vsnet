@@ -76,6 +76,7 @@ namespace Spring.VisualStudio.Completion
                 case Declaration.DeclarationType.Property:
                 case Declaration.DeclarationType.ConstructorArg:
                 case Declaration.DeclarationType.EnumMember:
+                case Declaration.DeclarationType.Boolean:
                     return glyphService.GetGlyph(GetGroupFromDeclaration(declarationType), GetScopeFromDeclaration(declarationType));
                 case Declaration.DeclarationType.Snippet:
                 case Declaration.DeclarationType.Alias:
@@ -106,6 +107,8 @@ namespace Spring.VisualStudio.Completion
                     return StandardGlyphGroup.GlyphGroupField;
                 case Declaration.DeclarationType.EnumMember:
                     return StandardGlyphGroup.GlyphGroupEnumMember;
+                case Declaration.DeclarationType.Boolean:
+                    return StandardGlyphGroup.GlyphGroupValueType;
                 case Declaration.DeclarationType.Alias:
                     return StandardGlyphGroup.GlyphGroupConstant;
                 case Declaration.DeclarationType.Snippet:

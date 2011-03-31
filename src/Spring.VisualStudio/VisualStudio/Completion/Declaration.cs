@@ -36,6 +36,7 @@ namespace Spring.VisualStudio.Completion
             Property,
             ConstructorArg,
             EnumMember,
+            Boolean,
             Alias,
             Snippet,
             Unknown

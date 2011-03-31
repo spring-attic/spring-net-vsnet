@@ -124,7 +124,7 @@ namespace Spring.VisualStudio.Completion
                             string typeName = elt2.GetAttribute("type");
                             if (!String.IsNullOrWhiteSpace(typeName))
                             {
-                                this.AddTypeCtorValuesCompletionSets(session, completionSets, typeName);
+                                this.AddTypeCtorNamesCompletionSets(session, completionSets, typeName);
                             }
                         }
                     }
@@ -175,14 +175,13 @@ namespace Spring.VisualStudio.Completion
             if (!attrValue.Contains('.'))
             {
                 declarations.AddRange(GetSpringAliasesDeclarations());
-                //declarations.AddRange(GetReferencesDeclarations(addInterfaces));
             }
             declarations.AddRange(GetProjectDeclarations(attrValue, addInterfaces));
 
             completionSets.Add(GetCompletions(declarations, session, false));
         }
 
-        private void AddTypeCtorValuesCompletionSets(ICompletionSession session, IList<CompletionSet> completionSets, string typeName)
+        private void AddTypeCtorNamesCompletionSets(ICompletionSession session, IList<CompletionSet> completionSets, string typeName)
         {
             DTE dte = this.serviceProvider.GetService(typeof(DTE)) as DTE;
             Project prj = dte.ActiveDocument.ProjectItem.ContainingProject;
@@ -263,13 +262,17 @@ namespace Spring.VisualStudio.Completion
                         }
                         completionSets.Add(GetCompletions(declarations, session, false));
                     }
-                    else if (cp.Type.CodeType is CodeClass)
+                    else if (cp.Type.AsString.Equals("bool", StringComparison.OrdinalIgnoreCase))
                     {
-                        if (cp.Type.AsString.Equals("System.Type", StringComparison.OrdinalIgnoreCase) ||
-                            cp.Type.AsString.Equals("System.RuntimeType", StringComparison.OrdinalIgnoreCase))
-                        {
-                            AddTypeCompletionSets(session, completionSets, attrValue, true);
-                        }
+                        List<Declaration> declarations = new List<Declaration>();
+                        declarations.Add(new Declaration("true", "true", Declaration.DeclarationType.Boolean, "true"));
+                        declarations.Add(new Declaration("false", "false", Declaration.DeclarationType.Boolean, "false"));
+                        completionSets.Add(GetCompletions(declarations, session, false));
+                    }
+                    else if (cp.Type.AsString.Equals("System.Type", StringComparison.OrdinalIgnoreCase) ||
+                        cp.Type.AsString.Equals("System.RuntimeType", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AddTypeCompletionSets(session, completionSets, attrValue, true);
                     }
                 }
             }
@@ -352,87 +355,6 @@ namespace Spring.VisualStudio.Completion
             
             return declarations;
         }
-
-        //private IList<Declaration> GetReferencesDeclarations(bool addInterfaces)
-        //{
-        //    IList<Declaration> declarations = new List<Declaration>();
-
-        //    DTE dte = this.serviceProvider.GetService(typeof(DTE)) as DTE;
-        //    Project prj = dte.ActiveDocument.ProjectItem.ContainingProject;
-
-        //    if (prj.Object is VSProject)
-        //    {
-        //        VSProject vsPrj = prj.Object as VSProject;
-
-        //        foreach (Reference reference in vsPrj.References)
-        //        {
-        //            try
-        //            {
-        //                Assembly assembly = Assembly.LoadFile(reference.Path);
-        //                string assemblyName = assembly.GetName().Name;
-        //                foreach (Type type in assembly.GetExportedTypes())
-        //                {
-        //                    //CodeType codeType = prj.CodeModel.CodeTypeFromFullName(type.FullName);
-        //                    //if (codeType != null)
-        //                    //{
-        //                    //    if (codeType is CodeInterface)
-        //                    //    {
-        //                    //        if (addInterfaces)
-        //                    //        {
-        //                    //            CodeInterface ci = codeType as CodeInterface;
-        //                    //            if (ci.Access == vsCMAccess.vsCMAccessPublic)
-        //                    //            {
-        //                    //                declarations.Add(new Declaration(
-        //                    //                    ci.FullName,
-        //                    //                    String.Format("{0}, {1}", ci.FullName, assemblyName),
-        //                    //                    Declaration.DeclarationType.Interface,
-        //                    //                    String.Format("{0}, {1}{2}{3}", ci.FullName, assemblyName, Environment.NewLine, ci.DocComment)));
-        //                    //            }
-        //                    //        }
-        //                    //    }
-        //                    //    else if (codeType is CodeClass)
-        //                    //    {
-        //                    //        CodeClass ct = codeType as CodeClass;
-        //                    //        if (ct.Access == vsCMAccess.vsCMAccessPublic)
-        //                    //        {
-        //                    //            declarations.Add(new Declaration(
-        //                    //                ct.FullName,
-        //                    //                String.Format("{0}, {1}", ct.FullName, assemblyName),
-        //                    //                Declaration.DeclarationType.Class,
-        //                    //                String.Format("{0}, {1}{2}{3}", ct.FullName, assemblyName, Environment.NewLine, ct.DocComment)));
-        //                    //        }
-        //                    //    }
-        //                    //}
-        //                    if (type.IsInterface)
-        //                    {
-        //                        if (addInterfaces)
-        //                        {
-        //                            declarations.Add(new Declaration(
-        //                                type.FullName,
-        //                                String.Format("{0}, {1}", type.FullName, assemblyName),
-        //                                Declaration.DeclarationType.Interface,
-        //                                String.Format("{0}, {1}", type.FullName, assemblyName))); // TODO
-        //                        }
-        //                    }
-        //                    else
-        //                    {
-        //                        declarations.Add(new Declaration(
-        //                            type.FullName,
-        //                            String.Format("{0}, {1}", type.FullName, assemblyName),
-        //                            Declaration.DeclarationType.Class,
-        //                            String.Format("{0}, {1}", type.FullName, assemblyName)));
-        //                    }
-        //                }
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                Console.WriteLine(ex);
-        //            }
-        //        }
-        //    }
-
-        //    return declarations;
-        //}
 
         private IList<Declaration> GetProjectDeclarations(string text, bool addInterfaces)
         {
