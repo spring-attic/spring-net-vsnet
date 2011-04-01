@@ -1,32 +1,299 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter id="vsnet">
-  <title>Using Spring.NET Visual Studio Extension</title>
+<chapter version="5" xml:id="vsnet" xmlns="http://docbook.org/ns/docbook"
+         xmlns:ns5="http://www.w3.org/1998/Math/MathML"
+         xmlns:ns42="http://www.w3.org/2000/svg"
+         xmlns:ns4="http://www.w3.org/1999/xlink"
+         xmlns:ns3="http://www.w3.org/1999/xhtml"
+         xmlns:ns="http://docbook.org/ns/docbook">
+  <title>Using the Spring.NET Visual Studio Extension</title>
 
-  <para>
-    The Extension Provides intellisence assistance in authoring Spring XML configuration files in Visual Studio .NET 2010.
-  </para>
+  <para>The Spring Extension provides IntelliSense assistance in authoring
+  Spring XML configuration files in Visual Studio .NET 2010. It provides the
+  following features:</para>
 
-  <para>
-    <itemizedlist>
+  <para><itemizedlist>
       <listitem>
-        Type completion
+         Type completion 
       </listitem>
-      <listitem>
-        Property name completion
-      </listitem>
-      <listitem>
-        Constructor argument name completion
-      </listitem>
-      <listitem>
-        Property value completion for property of type 'Type', 'Enum' and 'Boolean'
-      </listitem>
-      <listitem>
-        Snippets integration (inline or by menu)
-      </listitem>
-      <listitem>
-        Quickinfo tooltip for properties and types
-      </listitem>      
-    </itemizedlist>
-  </para>
 
+      <listitem>
+         Property name completion 
+      </listitem>
+
+      <listitem>
+         Constructor argument name completion 
+      </listitem>
+
+      <listitem>
+         Property value completion for property of type 'Type', 'Enum' and 'Boolean' 
+      </listitem>
+
+      <listitem>
+         Snippets integration (inline or by menu) 
+      </listitem>
+
+      <listitem>
+         Quick Info tooltip for properties and types 
+      </listitem>
+    </itemizedlist></para>
+
+  <para>The extension is open-source (Apache 2.0 License) and hosted on GitHub
+  <link
+  ns4:href="https://github.com/SpringSource/spring-net-vsnet">here</link>.
+  Contributors are more than welcome to help improve the feature set of the
+  extension. Note that an alternative, fully code base configuration option is
+  also now available for the Spring.NET container. More information can be
+  found on the <link ns4:href="http://www.springframework.net">Spring.NET home
+  page</link>.</para>
+
+  <para>There is a <link ns4:arcrole=""
+  ns4:href="http://maruxelo.free.fr/spring/index2.html">screencast</link>
+  showing the extension in action. Check it out!.</para>
+
+  <sect1>
+    <title>Installation</title>
+
+    <para>To install the extension double click on the
+    Spring.VisualStudio-1.0.0.msi file after unzipping the distribution. The
+    installation will not prompt you for any information. Once the install
+    screen is gone, start up VS.NET 2010. In VS.NET if you select
+    "Help-&gt;About Visual Studio you will see an entry in the installed
+    products window named "Spring.NET Visual Studio Extension 1.0.0". You will
+    also be able to see it listed under the Tools-&gt;Extension Manager Window
+    as shown below.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/extension-manager.png" format=""></imagedata>
+      </imageobject>
+    </mediaobject>
+
+    <para>To do a tour of the features, we will use the <link
+    ns4:href="http://www.springframework.net/doc-latest/reference/html/quickstarts.html#qs-moviefinder">MovieFinder
+    example</link> that ships with the distribution of Spring.NET. The C# code
+    listings for the MovieFinder application can be found in the
+    <literal>examples/Spring/Spring.Examples.MovieFinder</literal> directory
+    off the top level directory of the Spring.NET distribution.</para>
+
+    <para>To prepare the example for use exploring the VS.NET extension, go to
+    App.config and remove the following section of Spring XML
+    configuration.</para>
+
+    <programlisting language="myxml">
+      &lt;object id="MyMovieLister" 
+              type="Spring.IocQuickStart.MovieFinder.MovieLister, Spring.IocQuickStart.MovieFinder"&gt;
+        &lt;property name="MovieFinder" ref="AnotherMovieFinder"/&gt;
+      &lt;/object&gt;
+     
+      
+      &lt;!-- An IMovieFinder implementation that uses harcoded values as it's movie source... --&gt;
+      &lt;object id="MyMovieFinder" 
+              type="Spring.IocQuickStart.MovieFinder.SimpleMovieFinder, Spring.IocQuickStart.MovieFinder"/&gt;
+      
+      &lt;!-- An IMovieFinder implementation that uses a text file as it's movie source...     --&gt;
+      &lt;object id="AnotherMovieFinder" 
+              type="Spring.IocQuickStart.MovieFinder.ColonDelimitedMovieFinder, Spring.IocQuickStart.MovieFinder"&gt;
+        &lt;constructor-arg index="0" value="movies.txt"/&gt;
+      &lt;/object&gt;</programlisting>
+
+    <para>We will recreate the object definitions using the VS.NET
+    tooling.</para>
+  </sect1>
+
+  <sect1>
+    <title>Type Completion</title>
+
+    <para>Using the type completion feature you will be able to easily
+    navigate to the type that you want to include in a Spring XML object
+    definition.</para>
+
+    <para>Open up App.config and go to the section of the file where you just
+    deleted the XML object definitions described in the previous section. Let
+    us now recreate the XML object definition for 'AnotherMovieFinder' (Note
+    that 'MyMovieFinder' was not really used in the out of the box
+    configuration of the example). Start typing </para>
+
+    <para><literal>&lt;object id="AnotherMovieFinder" type="</literal></para>
+
+    <para>At this point you will see a drop down list of primitive types
+    offered up for code completion since without additional information
+    provided by you, that is the only suggestions the extension can provide
+    for a type. </para>
+
+    <para>You should start typing out the namespace where AnotherMovieFinder
+    lives, in this case typing <literal>Spring.Io</literal> will get you going
+    and you will have a screen as shown below.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/type-completion-1.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+
+    <para>As you type out <literal>Spring.Io</literal> you will see a drop
+    down box for the various namespaces you can get come content assist with.
+    In this case since the first part of our namespace is 'Spring' we see some
+    namespaces that are part of the Spring framework itself. If you use the
+    arrow keys to select one the namespace names (or type out
+    <literal>Spring.IocQuickStart.MovieFinder</literal>) you will end up with
+    the following</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/type-completion-2.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+
+    <para>We have reached the class we were interested in and can also see the
+    documentation of that class to help us ensure this is in fact the correct
+    class we want to configure. The documentation in a Quick Info tooltip box.
+    This is shown better in the following image.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/type-completion-3.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+
+    <para>Selecting <classname>ColonDelimitedMovieFinder</classname> and
+    closing the XML with a <emphasis role="bold">"&gt;</emphasis> will leave
+    you with the following - note that the assembly name has been entered in
+    for you automatically.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/type-completion-4.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+
+    <para>We are now ready to configure the
+    <classname>ColonDelilmitedMovieFinder</classname> with constructor and/or
+    property element using the VS.NET extension.</para>
+  </sect1>
+
+  <sect1>
+    <title>Property name completion</title>
+
+    <para>If you start typing out the XML configuration for the property of
+    the existing XML object definition for
+    <classname>ColonDelimtedMovieFinder</classname> as shown the previous step
+    - once you have type the 'quote" to enter the name of the property, then
+    hit <emphasis role="bold">CTRL-SPACE</emphasis> to get completion of the
+    property names for that object. In this case, the only property is
+    MovieFile as shown below:</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/property-completion-1.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+
+    <para>You can then use the cursor key to select the property. You also can
+    see a Quick Info tooltip box showing the documentation for that property.
+    The completed XML object definition looks like this</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/property-completion-2.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </sect1>
+
+  <sect1>
+    <title>Constructor argument name completion</title>
+
+    <para>Starting from the object definition that has only the type name
+    defined, we can also use constructor arguments to configure the
+    ColonDelimtedMovieFinder. Start typing out</para>
+
+    <para> <literal>&lt;constructor-arg name="</literal></para>
+
+    <para>and then hit <emphasis role="bold">CTRL-SPACE</emphasis>. You will
+    see the name of the constructor argument, in this case called file, as
+    shown below. </para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/constructor-name-completion-1.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+
+    <para>Select the file name with the cursor and then fill in the value
+    'movies.txt'. You will end up with the configuration shown below</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/constructor-name-completion-2.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </sect1>
+
+  <sect1>
+    <title>Snippits integration</title>
+
+    <para>Code Snippets are a feature of VS.NET that provide structure to help
+    you fill in common code/configuration tasks In the previous sections we
+    were typing in by hand the &lt;object id=" part of the object definition.
+    While XML IntelliSense offers help in creating an object definition, the
+    Code Snippet approach provides added convenience, in particular when using
+    to create a definition of an often used object such as
+    VariablePlaceholderConfigurer. If you open up the Code Snippips manager
+    (<emphasis role="bold">CTRL+K+B</emphasis>) you will see the list of
+    installed snippits as shown below</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/codesnippits-1.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+
+    <para>We will use the object Code Snippet to create an definition for the
+    MovieLister object. Type <emphasis role="bold">CTRL+K+X</emphasis> in the
+    Spring XML file and you will be presented with a menu of options to select
+    from, these are categorized by the area of Spring functionality (Aop,
+    Core, Web). </para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/snippits-1.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+
+    <para>Selecting Core and then Object will create the shell of the XML
+    fragment to fill in as shown below</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/snippits-2.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+
+    <para>You enter "MyMovieFinder" and then hit <emphasis
+    role="bold">TAB</emphasis> you will be taken to the <emphasis
+    role="bold">type=" "</emphasis> placeholder where you can use the type
+    completion features of the Spring extension to enter the type
+    Spring.IocQuickStart.MovieFinder.MovieLister,
+    Spring.IocQuickStart.MovieFinder. This is shown below.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/snippits-3.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+
+    <para>The property name "MovieFinder" can also be completed for you as
+    described in a previous section. However the <emphasis
+    role="bold">ref="AnotherMovieFinder"</emphasis> is not completed for you
+    and you will need to match the reference name to the name of the object
+    without any IDE assistance. The completed XML that will run the
+    MovieFinder application is shown below.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/snippits-4.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+
+    <para>Now you are ready to run the example application!</para>
+  </sect1>
 </chapter>
