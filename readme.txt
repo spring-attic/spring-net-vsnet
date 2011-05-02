@@ -1,6 +1,7 @@
 Spring.NET Visual Studio 2010 Extension, Release 1.0.0 (April 4, 2011)
 ----------------------------------------------------------------------
 https://github.com/SpringSource/spring-net-vsnet
+DO NOT USE GITHUB DOWNLOAD BUTTON !!!
 
 
 1. INTRODUCTION
@@ -50,3 +51,11 @@ To get the sources, check them out at the git repository at https://github.com/S
 
 We are always happy to receive your feedback on the forums. If you think you found a bug, have an improvement suggestion
 or feature request, please submit a ticket in JIRA (see link above).
+
+
+6. Contributing to Spring.NET CodeConfig
+
+Github is for social coding: if you want to write code, we encourage contributions through pull requests from forks of this repository (see http://help.github.com/forking/). 
+Before we accept a non-trivial patch or pull request we will need you to sign the contributor's agreement (see https://support.springsource.com/spring_committer_signup). 
+Signing the contributor's agreement does not grant anyone commit rights to the main repository, but it does mean that we can accept your contributions, 
+and you will get an author credit if we do. Active contributors might be asked to join the core team, and given the ability to merge pull requests.
