@@ -222,11 +222,17 @@ namespace Spring.VisualStudio.Completion
                 {
                     foreach (CodeParameter cp in GetTypeCtorsArgs(codeType))
                     {
+                        string comment = String.Empty;
+                        try
+                        {
+                            comment = cp.DocComment;
+                        }
+                        catch (COMException) { }
                         completions.Add(new SpringCompletion(
                             this.glyphService,
                             cp.Name,
                             cp.Name,
-                            String.Format("{0} {1}{2}{3}", cp.Type.AsString, cp.FullName, Environment.NewLine, GetSummaryFromComment(cp.DocComment)), 
+                            String.Format("{0} {1}{2}{3}", cp.Type.AsString, cp.FullName, Environment.NewLine, GetSummaryFromComment(comment)), 
                             SpringCompletionType.ConstructorArg));
                     }
                 }
@@ -251,11 +257,17 @@ namespace Spring.VisualStudio.Completion
                 {
                     foreach (CodeProperty cp in GetTypeProperties(codeType))
                     {
+                        string comment = String.Empty;
+                        try
+                        {
+                            comment = cp.DocComment;
+                        }
+                        catch (COMException) { }
                         completions.Add(new SpringCompletion(
                             this.glyphService,
                             cp.Name,
                             cp.Name,
-                            String.Format("{0} {1}.{2}{3}{4}", cp.Type.AsString, cp.Parent.Name, cp.Name, Environment.NewLine, GetSummaryFromComment(cp.DocComment)), 
+                            String.Format("{0} {1}.{2}{3}{4}", cp.Type.AsString, cp.Parent.Name, cp.Name, Environment.NewLine, GetSummaryFromComment(comment)), 
                             SpringCompletionType.Property));
                     }
                 }
@@ -286,11 +298,17 @@ namespace Spring.VisualStudio.Completion
                             if (ce2 is CodeVariable)
                             {
                                 CodeVariable cv = ce2 as CodeVariable;
+                                string comment = String.Empty;
+                                try
+                                {
+                                    comment = cv.DocComment;
+                                }
+                                catch (COMException) { }
                                 completions.Add(new SpringCompletion(
                                     this.glyphService, 
                                     cv.Name,
                                     cv.Name,
-                                    String.Format("{0}.{1}{2}{3}", ce.Name, cv.Name, Environment.NewLine, GetSummaryFromComment(cv.DocComment)), 
+                                    String.Format("{0}.{1}{2}{3}", ce.Name, cv.Name, Environment.NewLine, GetSummaryFromComment(comment)), 
                                     SpringCompletionType.EnumMember));
                             }
                         }
