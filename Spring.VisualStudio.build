@@ -9,9 +9,9 @@
   <property name="product.url" value="http://www.springframework.net/" />
   <property name="product.description" value="An extension with intellisence assistance in authoring Spring XML configuration files in VS.NET 2010" />
   
-  <property name="product.version" value="1.0.0" />
+  <property name="product.version" value="1.0.1" />
   <!-- Update ${product.code} when ${product.version} changes -->
-  <property name="product.code" value="13b72b8a-bc63-46e1-aad9-68d532270f66" />
+  <property name="product.code" value="b72b813a-c6b3-6e41-d9aa-2268d5370f66" />
   <!-- alpha / beta# / rc# -->
   <property name="product.releasetype" value="" />
   <property name="product.fullname" value="${product.name} ${product.version}" if="${(product.releasetype == '')}" />
@@ -35,9 +35,12 @@
   
   <target name="build">
     <echo message="Current .NET Framework = ${nant.settings.currentframework}" />
+    <copy file="${root.dir}\src\CommonAssemblyInfo.cs" tofile="${root.dir}\src\CommonAssemblyInfo.cs.temp" />
     <call target="update-common-assemblyinfo" />
     <call target="update-vsix-manifest" />
     <call target="compile" />
+    <copy file="${root.dir}\src\CommonAssemblyInfo.cs.temp" tofile="${root.dir}\src\CommonAssemblyInfo.cs" overwrite="true" />
+    <delete file="${root.dir}\src\CommonAssemblyInfo.cs.temp" />
   </target>
 
   <target name="daily">
@@ -107,11 +110,6 @@
         <namespace prefix="n" uri="http://schemas.microsoft.com/developer/vsx-schema/2010" />
       </namespaces>
     </xmlpoke>
-    <xmlpoke file="${root.dir}\src\Spring.VisualStudio\source.extension.vsixmanifest" xpath="/n:Vsix/n:Identifier/n:MoreInfoUrl" value="${product.url}">
-      <namespaces>
-        <namespace prefix="n" uri="http://schemas.microsoft.com/developer/vsx-schema/2010" />
-      </namespaces>
-    </xmlpoke>
   </target>
 
   <target name="compile">
@@ -163,7 +161,7 @@
     <!-- copy over readme etc. -->
     <copy todir="${package.dir}" file="${root.dir}/readme.txt" />
     <copy todir="${package.dir}" file="${root.dir}/license.txt" />
-    <!--<copy todir="${package.dir}" file="${root.dir}/changelog.txt" />-->
+    <copy todir="${package.dir}" file="${root.dir}/changelog.txt" />
 
   </target>
 

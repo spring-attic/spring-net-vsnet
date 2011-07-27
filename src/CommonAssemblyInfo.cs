@@ -14,12 +14,12 @@ using System.Runtime.InteropServices;
 
 [assembly: CLSCompliantAttribute(false)]
 [assembly: ComVisibleAttribute(false)]
-[assembly: AssemblyProductAttribute("Spring.NET Visual Studio 2010 Extension 1.0.0")]
+[assembly: AssemblyProductAttribute("Spring.NET Visual Studio 2010 Extension 1.0.1")]
 [assembly: AssemblyCompanyAttribute("http://www.springframework.net/")]
 [assembly: AssemblyCopyrightAttribute("Copyright 2004-2011 SpringSource")]
 [assembly: AssemblyTrademarkAttribute("Apache License, Version 2.0")]
 [assembly: AssemblyCultureAttribute("")]
-[assembly: AssemblyVersionAttribute("1.0.0.374")]
-[assembly: AssemblyConfigurationAttribute("release")]
-[assembly: AssemblyInformationalVersionAttribute("1.0.0.374; release")]
+[assembly: AssemblyVersionAttribute("1.0.1.0")]
+[assembly: AssemblyConfigurationAttribute("dev")]
+[assembly: AssemblyInformationalVersionAttribute("1.0.1.0; dev")]
 

@@ -1,0 +1,8 @@
+SPRING.NET VISUAL STUDIO 2010 EXTENSION CHANGELOG
+=================================================
+http://www.springframework.net/vsaddin/
+
+Release Version 1.0.1 July 28, 2011
+
+Bug
+[SPRNETVSADDIN-2] - Property name completion does not work for types in a referenced library or project.

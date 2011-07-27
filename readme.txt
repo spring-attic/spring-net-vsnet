@@ -1,11 +1,11 @@
-Spring.NET Visual Studio 2010 Extension, Release 1.0.0 (April 4, 2011)
+Spring.NET Visual Studio 2010 Extension, Release 1.0.1 (July 27, 2011)
 ----------------------------------------------------------------------
 http://www.springframework.net/vsaddin/
 
 
 1. INTRODUCTION
 
-The 1.0.0 release of Spring.NET Visual Studio 2010 Extension provides intellisence assistance in authoring Spring XML configuration files
+The 1.0.1 release of Spring.NET Visual Studio 2010 Extension provides intellisence assistance in authoring Spring XML configuration files
 	* Type completion
 	* Property name completion
 	* Constructor argument name completion
