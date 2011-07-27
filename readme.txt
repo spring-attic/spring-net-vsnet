@@ -1,7 +1,6 @@
 Spring.NET Visual Studio 2010 Extension, Release 1.0.0 (April 4, 2011)
 ----------------------------------------------------------------------
-https://github.com/SpringSource/spring-net-vsnet
-DO NOT USE GITHUB DOWNLOAD BUTTON !!!
+http://www.springframework.net/vsaddin/
 
 
 1. INTRODUCTION

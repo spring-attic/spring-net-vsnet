@@ -6,7 +6,7 @@
     <Version>1.0.0</Version>
     <Description xml:space="preserve">An extension with intellisence assistance in authoring Spring XML configuration files in VS.NET 2010</Description>
     <Locale>1033</Locale>
-    <MoreInfoUrl>http://www.springframework.net/</MoreInfoUrl>
+    <MoreInfoUrl>http://www.springframework.net/vsaddin/</MoreInfoUrl>
     <Icon>Resources\Package.ico</Icon>
     <PreviewImage>Resources\Preview.png</PreviewImage>
     <InstalledByMsi>true</InstalledByMsi>
