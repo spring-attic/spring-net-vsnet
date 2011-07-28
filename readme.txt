@@ -1,4 +1,4 @@
-Spring.NET Visual Studio 2010 Extension, Release 1.0.1 (July 27, 2011)
+Spring.NET Visual Studio 2010 Extension, Release 1.0.1 (July 28, 2011)
 ----------------------------------------------------------------------
 http://www.springframework.net/vsaddin/
 
