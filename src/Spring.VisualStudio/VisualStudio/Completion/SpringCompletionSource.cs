@@ -19,19 +19,19 @@
 #endregion
 
 using System;
-using System.Reflection;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Shell.Design;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.TextManager.Interop;
 using EnvDTE;
-using VSLangProj;
 using Microsoft.XmlEditor;
 
 namespace Spring.VisualStudio.Completion
@@ -205,7 +205,7 @@ namespace Spring.VisualStudio.Completion
 
             completions.Sort();
             return completions;
-                }
+        }
 
         private IEnumerable<SpringCompletion> GetTypeCtorsArgsNamesCompletions(string typeName)
         {
@@ -440,44 +440,19 @@ namespace Spring.VisualStudio.Completion
                 {
                     if (addInterfaces)
                     {
-                        CodeInterface ci = ce as CodeInterface;
-                        if (ci.Access == vsCMAccess.vsCMAccessPublic)
+                        CodeType ct = ce as CodeType;
+                        if (ct.Access == vsCMAccess.vsCMAccessPublic)
                         {
-                            string comment = String.Empty;
-                            try
-                            {
-                                comment = ci.DocComment;
-                            }
-                            catch (COMException) { }
-                            string assemblyName = GetAssemblyName(prj, ce);
-                            completions.Add(new SpringCompletion(
-                                this.glyphService,
-                                ci.Name,
-                                String.Format("{0}, {1}", ci.Name, assemblyName),
-                                String.Format("{0}, {1}{2}{3}", ci.FullName, assemblyName, Environment.NewLine, GetSummaryFromComment(comment)), 
-                                SpringCompletionType.Interface));
+                            completions.Add(CreateSpringCompletion(prj, ct, SpringCompletionType.Interface));
                         }
                     }
                 }
                 else if (ce is CodeClass)
                 {
-                    CodeClass cc = ce as CodeClass;
-                    if (cc.Access == vsCMAccess.vsCMAccessPublic)
+                    CodeType ct = ce as CodeType;
+                    if (ct.Access == vsCMAccess.vsCMAccessPublic)
                     {
-                        string comment = String.Empty;
-                        try
-                        {
-                            comment = cc.DocComment;
-                        }
-                        catch (COMException) { }
-                        string assemblyName = GetAssemblyName(prj, ce);
-                        completions.Add(new SpringCompletion(
-                            this.glyphService, 
-                            cc.Name,
-                            String.Format("{0}, {1}", cc.Name, assemblyName),
-                            String.Format("{0}, {1}{2}{3}", cc.FullName, assemblyName, Environment.NewLine, GetSummaryFromComment(comment)), 
-                            SpringCompletionType.Class));
-
+                        completions.Add(CreateSpringCompletion(prj, ct, SpringCompletionType.Class));
                     }
                 }
             }
@@ -486,34 +461,40 @@ namespace Spring.VisualStudio.Completion
             return completions;
         }
 
-        private static string GetAssemblyName(Project prj, CodeElement ce)
+        private SpringCompletion CreateSpringCompletion(Project prj, CodeType codeType, SpringCompletionType completionType)
         {
-            if (ce.InfoLocation == vsCMInfoLocation.vsCMInfoLocationProject)
+            string comment = String.Empty;
+            try
             {
-                return ce.ProjectItem.ContainingProject.Properties.Item("AssemblyName").Value.ToString();
+                comment = codeType.DocComment;
             }
-            if (ce.InfoLocation == vsCMInfoLocation.vsCMInfoLocationExternal)
+            catch (COMException) { }
+            Type type = this.ResolveType(prj, codeType);
+            string assemblyName = type == null ? String.Empty : type.Assembly.GetName().Name;
+            string title = type == null ? codeType.Name : String.Format("{0}, {1}", codeType.Name, assemblyName);
+            string description = type == null ? codeType.FullName : String.Format("{0}, {1}", codeType.FullName, assemblyName);
+            description += (Environment.NewLine + GetSummaryFromComment(comment));
+
+            return new SpringCompletion(this.glyphService, codeType.Name, title, description, completionType);
+        }
+
+        private Type ResolveType(Project prj, CodeType codeType)
+        {
+            try
             {
-                // Does not work
-                //dynamic exloc = ce.Extender["ExternalLocation"];
-                //return exloc.ExternalLocation;
+                DynamicTypeService typeService = this.serviceProvider.GetService(typeof(DynamicTypeService)) as DynamicTypeService;
+                IVsSolution solution = this.serviceProvider.GetService(typeof(IVsSolution)) as IVsSolution;
 
-                if (prj.Object is VSProject)
-                {
-                    VSProject vsPrj = prj.Object as VSProject;
+                IVsHierarchy hierarchy;
+                solution.GetProjectOfUniqueName(prj.UniqueName, out hierarchy);
 
-                    foreach (Reference reference in vsPrj.References)
-                    {
-                        Assembly assembly = Assembly.UnsafeLoadFrom(reference.Path);
-                        Type type = assembly.GetType(ce.FullName, false, true);
-                        if (type != null)
-                        {
-                            return assembly.GetName().Name;
-                        }
-                    }
-                }
+                ITypeResolutionService resolutionService = typeService.GetTypeResolutionService(hierarchy);
+                return resolutionService.GetType(codeType.FullName);
             }
-            return "?";
+            catch
+            {
+                return null;
+            }
         }
 
         private static string GetSummaryFromComment(string comment)
