@@ -19,11 +19,9 @@ The 1.0.1 release of Spring.NET Visual Studio 2010 Extension provides intellisen
 Visual Studio 2010
 
 
-
 3. KNOWN ISSUES
 
 None
-
 
 
 4. RELEASE INFO
@@ -37,8 +35,14 @@ Latest info is available at the public website: http://www.springframework.net/
 Spring.NET Visual Studio Extension is released under the terms of the Apache Software License (see license.txt).
 
 
+5. HOW TO BUILD
 
-5. Support
+There is a Visual Studio 2010 solution file to build and debug the extension (Requires VS2010 SDK).
+WARNING: You CANNOT build the extension if a previous version is installed. 
+Uninstall any copy of the extension before building the solution or running project's build script(s).
+
+
+6. Support
 
 The user forums at http://forum.springframework.net/ are available for you to submit questions, support requests, and interact with other Spring.NET users.
 
@@ -51,8 +55,10 @@ To get the sources, check them out at the git repository at https://github.com/S
 We are always happy to receive your feedback on the forums. If you think you found a bug, have an improvement suggestion
 or feature request, please submit a ticket in JIRA (see link above).
 
+Follow us on Twitter @SpringForNet
 
-6. Contributing to Spring.NET Visual Studio 2010 Extension
+
+7. Contributing to Spring.NET Visual Studio 2010 Extension
 
 Github is for social coding: if you want to write code, we encourage contributions through pull requests from forks of this repository (see http://help.github.com/forking/). 
 Before we accept a non-trivial patch or pull request we will need you to sign the contributor's agreement (see https://support.springsource.com/spring_committer_signup). 
