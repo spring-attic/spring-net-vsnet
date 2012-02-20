@@ -9,9 +9,9 @@
   <property name="product.url" value="http://www.springframework.net/" />
   <property name="product.description" value="An extension with intellisence assistance in authoring Spring XML configuration files in VS.NET 2010" />
   
-  <property name="product.version" value="1.0.1" />
+  <property name="product.version" value="1.0.2" />
   <!-- Update ${product.code} when ${product.version} changes -->
-  <property name="product.code" value="b72b813a-c6b3-6e41-d9aa-2268d5370f66" />
+  <property name="product.code" value="e7fe8e5b-9889-40af-b3f2-219742f5cc2c" />
   <!-- alpha / beta# / rc# -->
   <property name="product.releasetype" value="" />
   <property name="product.fullname" value="${product.name} ${product.version}" if="${(product.releasetype == '')}" />

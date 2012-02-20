@@ -3,7 +3,7 @@
   <Identifier Id="spring-net-vsnet">
     <Name>Spring.NET Visual Studio 2010 Extension</Name>
     <Author>Bruno Baia</Author>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Description xml:space="preserve">An extension with intellisence assistance in authoring Spring XML configuration files in VS.NET 2010</Description>
     <Locale>1033</Locale>
     <MoreInfoUrl>http://www.springframework.net/vsaddin/</MoreInfoUrl>
