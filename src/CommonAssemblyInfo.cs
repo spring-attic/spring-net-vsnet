@@ -16,7 +16,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisibleAttribute(false)]
 [assembly: AssemblyProductAttribute("Spring.NET Visual Studio 2010 Extension 1.0.1")]
 [assembly: AssemblyCompanyAttribute("http://www.springframework.net/")]
-[assembly: AssemblyCopyrightAttribute("Copyright 2004-2011 SpringSource")]
+[assembly: AssemblyCopyrightAttribute("Copyright 2004-2012 SpringSource")]
 [assembly: AssemblyTrademarkAttribute("Apache License, Version 2.0")]
 [assembly: AssemblyCultureAttribute("")]
 [assembly: AssemblyVersionAttribute("1.0.1.0")]
