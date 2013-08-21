@@ -9,10 +9,10 @@
 
 
     <Property Id="VSROOTREG">
-      <RegistrySearch Id="VSRootRegistry" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\10.0\Setup\VS" Name="ProductDir" Type="directory" />
+      <RegistrySearch Id="VSRootRegistry" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\11.0\Setup\VS" Name="ProductDir" Type="directory" />
     </Property>
     <Property Id="VSINSTALLREG">
-      <RegistrySearch Id="VSInstallRegistry" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\10.0" Name="InstallDir" Type="directory" />
+      <RegistrySearch Id="VSInstallRegistry" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\11.0" Name="InstallDir" Type="directory" />
     </Property>
     <!-- Install for all users -->
     <Property Id="ALLUSERS">2</Property>
@@ -22,7 +22,7 @@
 
 
     <!-- Launch conditions -->
-    <Condition Message="This setup requires Microsoft Visual Studio 2010.">VSINSTALLREG OR Installed</Condition>
+    <Condition Message="This setup requires Microsoft Visual Studio 2012.">VSINSTALLREG OR Installed</Condition>
 
 
     <Directory Id="TARGETDIR" Name="SourceDir">

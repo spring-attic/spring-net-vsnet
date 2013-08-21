@@ -5,14 +5,14 @@
 <book xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://docbook.org/ns/docbook/xi" version="5.0" xml:lang="en">
   <bookinfo>
     <!-- auto-generated -->
-    <title>Spring.NET Visual Studio 2010 Extension</title>
+    <title>Spring.NET Visual Studio 2012 Extension</title>
     <subtitle>Reference Documentation</subtitle>
     <!-- auto-generated -->
-    <releaseinfo>1.0.2</releaseinfo>
+    <releaseinfo>1.0.3</releaseinfo>
     <!-- auto-generated -->
-    <copyright>Copyright 2004-2012 SpringSource</copyright>
+    <copyright>Copyright 2004-2013 SpringSource</copyright>
     <!-- auto-generated -->
-    <pubdate>Last Updated 2/20/2012</pubdate>
+    <pubdate>Last Updated 8/21/2013</pubdate>
     <authorgroup>
       <author>
         <firstname>Bruno</firstname>
