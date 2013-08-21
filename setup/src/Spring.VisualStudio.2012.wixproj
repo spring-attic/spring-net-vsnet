@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.5</ProductVersion>
+    <ProjectGuid>{171fd88b-f45b-409e-beff-28109d618edb}</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>Spring.VisualStudio</OutputName>
+    <OutputType>Package</OutputType>
+    <WixToolPath>$(NAntRootPath)\setup\lib\WiX\3.5.2430.0\</WixToolPath>
+    <WixTargetsPath>$(WixToolPath)Wix.targets</WixTargetsPath>
+    <WixTasksPath>$(WixToolPath)wixtasks.dll</WixTasksPath>
+    <DefineSolutionProperties>False</DefineSolutionProperties>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug;SchemasDir=Schemas;ExtensionDir=Extension;ProductCode=$(NAntProductCode);ProductVersion=$(NAntProductVersion);ProductName=$(NAntProductName);ProductFullName=$(NAntProductFullName);ProductDescription=$(NAntProductDescription);ProductCompany=$(NAntProductCompany);ProductUrl=$(NAntProductUrl)</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>SchemasDir=Schemas;ExtensionDir=Extension;ProductCode=$(NAntProductCode);ProductVersion=$(NAntProductVersion);ProductName=$(NAntProductName);ProductFullName=$(NAntProductFullName);ProductDescription=$(NAntProductDescription);ProductCompany=$(NAntProductCompany);ProductUrl=$(NAntProductUrl)</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup>
+    <HarvestDirectoryNoLogo>true</HarvestDirectoryNoLogo>
+    <HarvestDirectoryAutogenerateGuids>false</HarvestDirectoryAutogenerateGuids>
+    <HarvestDirectoryGenerateGuidsNow>true</HarvestDirectoryGenerateGuidsNow>
+  </PropertyGroup>
+  <ItemGroup>
+    <HarvestDirectory Include="Schemas">
+      <ComponentGroupName>Schemas</ComponentGroupName>
+      <DirectoryRefId>VSSCHEMASDIR</DirectoryRefId>
+      <SuppressRootDirectory>true</SuppressRootDirectory>
+      <PreprocessorVariable>var.SchemasDir</PreprocessorVariable>
+    </HarvestDirectory>
+    <HarvestDirectory Include="Extension">
+      <ComponentGroupName>Extension</ComponentGroupName>
+      <DirectoryRefId>VSEXTENSIONDIR</DirectoryRefId>
+      <SuppressRootDirectory>true</SuppressRootDirectory>
+      <PreprocessorVariable>var.ExtensionDir</PreprocessorVariable>
+    </HarvestDirectory>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Product.wxs" />
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" />
+  <!--
+	To modify your build process, add your task inside one of the targets below and uncomment it.
+	Other similar extension points exist, see Wix.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+  -->
+</Project>
