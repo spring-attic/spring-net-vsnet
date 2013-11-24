@@ -2,22 +2,23 @@
 <project name="Spring.VisualStudio" default="build" xmlns="http://nant.sf.net/release/0.91-alpha2/nant.xsd">
    
   <property name="datetime.now" value="${datetime::now()}" />
-
-  <property name="product.name" value="Spring.NET Visual Studio 2010 Extension" />
+  
+  <property name="visualstudio" value="2012" />
+  <property name="product.name" value="Spring.NET Visual Studio ${visualstudio} Extension" />
   <property name="product.company" value="SpringSource" />
   <property name="product.copyright" value="Copyright 2004-${datetime::get-year(datetime.now)} ${product.company}" />
   <property name="product.url" value="http://www.springframework.net/" />
-  <property name="product.description" value="An extension with intellisence assistance in authoring Spring XML configuration files in VS.NET 2010" />
+  <property name="product.description" value="An extension with intellisence assistance in authoring Spring XML configuration files in VS.NET ${visualstudio}" />
   
-  <property name="product.version" value="1.0.2" />
+  <property name="product.version" value="1.0.0" />
   <!-- Update ${product.code} when ${product.version} changes -->
-  <property name="product.code" value="e7fe8e5b-9889-40af-b3f2-219742f5cc2c" />
+  <property name="product.code" value="590d76ee-3100-4eea-9995-ba2df453b566" />
   <!-- alpha / beta# / rc# -->
   <property name="product.releasetype" value="" />
   <property name="product.fullname" value="${product.name} ${product.version}" if="${(product.releasetype == '')}" />
   <property name="product.fullname" value="${product.name} ${product.version} (${product.releasetype})" if="${(product.releasetype != '')}" />
 
-  <property name="project.buildnumber" value="${math::abs(math::floor(timespan::get-total-days(datetime::now() - datetime::parse('01/01/2010'))))}" />
+  <property name="project.buildnumber" value="${math::abs(math::floor(timespan::get-total-days(datetime::now() - datetime::parse('11/01/2013'))))}" />
   <property name="project.version" value="${product.version}.${project.buildnumber}" overwrite="false" />
   <property name="project.buildconfiguration" value="Debug" />
   <property name="project.buildtype" value="dev" />
@@ -47,8 +48,8 @@
     <property name="project.buildconfiguration" value="Release" />
     <property name="project.buildtype" value="daily" />
     <property name="product.fullname" value="${product.name} (Daily build from ${datetime::get-month(datetime.now)}/${datetime::get-day(datetime.now)}/${datetime::get-year(datetime.now)})" />
-    <property name="project.msi-filename" value="Spring.VisualStudio-${datetime::get-year(datetime.now)}${string::pad-left(datetime::get-month(datetime.now), 2, '0')}${string::pad-left(datetime::get-day(datetime.now), 2, '0')}-${string::pad-left(datetime::get-hour(datetime.now), 2, '0')}${string::pad-left(datetime::get-minute(datetime.now), 2, '0')}.msi" />
-    <property name="project.zip-filename" value="Spring.VisualStudio-${datetime::get-year(datetime.now)}${string::pad-left(datetime::get-month(datetime.now), 2, '0')}${string::pad-left(datetime::get-day(datetime.now), 2, '0')}-${string::pad-left(datetime::get-hour(datetime.now), 2, '0')}${string::pad-left(datetime::get-minute(datetime.now), 2, '0')}.zip" />
+    <property name="project.msi-filename" value="Spring.VisualStudio.${visualstudio}-${datetime::get-year(datetime.now)}${string::pad-left(datetime::get-month(datetime.now), 2, '0')}${string::pad-left(datetime::get-day(datetime.now), 2, '0')}-${string::pad-left(datetime::get-hour(datetime.now), 2, '0')}${string::pad-left(datetime::get-minute(datetime.now), 2, '0')}.msi" />
+    <property name="project.zip-filename" value="Spring.VisualStudio.${visualstudio}-${datetime::get-year(datetime.now)}${string::pad-left(datetime::get-month(datetime.now), 2, '0')}${string::pad-left(datetime::get-day(datetime.now), 2, '0')}-${string::pad-left(datetime::get-hour(datetime.now), 2, '0')}${string::pad-left(datetime::get-minute(datetime.now), 2, '0')}.zip" />
     
     <call target="package-zip"/>
   </target>
@@ -56,10 +57,10 @@
   <target name="release">
     <property name="project.buildconfiguration" value="Release" />
     <property name="project.buildtype" value="release" />
-    <property name="project.msi-filename" value="Spring.VisualStudio-${product.version}.msi" if="${(product.releasetype == '')}" />
-    <property name="project.msi-filename" value="Spring.VisualStudio-${product.version}-${product.releasetype}.msi" if="${(product.releasetype != '')}" />
-    <property name="project.zip-filename" value="Spring.VisualStudio-${product.version}.zip" if="${(product.releasetype == '')}" />
-    <property name="project.zip-filename" value="Spring.VisualStudio-${product.version}-${product.releasetype}.zip" if="${(product.releasetype != '')}" />
+    <property name="project.msi-filename" value="Spring.VisualStudio.${visualstudio}-${product.version}.msi" if="${(product.releasetype == '')}" />
+    <property name="project.msi-filename" value="Spring.VisualStudio.${visualstudio}-${product.version}-${product.releasetype}.msi" if="${(product.releasetype != '')}" />
+    <property name="project.zip-filename" value="Spring.VisualStudio.${visualstudio}-${product.version}.zip" if="${(product.releasetype == '')}" />
+    <property name="project.zip-filename" value="Spring.VisualStudio.${visualstudio}-${product.version}-${product.releasetype}.zip" if="${(product.releasetype != '')}" />
     
     <call target="package-zip"/>
   </target>
@@ -95,19 +96,19 @@
 
   <target name="update-vsix-manifest">
     <echo message="Updating VSIX manifest file..." />
-    <xmlpoke file="${root.dir}\src\Spring.VisualStudio\source.extension.vsixmanifest" xpath="/n:Vsix/n:Identifier/n:Name" value="${product.name}">
+    <xmlpoke file="${root.dir}\src\Spring.VisualStudio\source.extension.vsixmanifest" xpath="/n:PackageManifest/n:Metadata/n:DisplayName" value="${product.name}">
       <namespaces>
-        <namespace prefix="n" uri="http://schemas.microsoft.com/developer/vsx-schema/2010" />
+        <namespace prefix="n" uri="http://schemas.microsoft.com/developer/vsx-schema/2011" />
       </namespaces>
     </xmlpoke>
-    <xmlpoke file="${root.dir}\src\Spring.VisualStudio\source.extension.vsixmanifest" xpath="/n:Vsix/n:Identifier/n:Version" value="${product.version}">
+    <xmlpoke file="${root.dir}\src\Spring.VisualStudio\source.extension.vsixmanifest" xpath="/n:PackageManifest/n:Metadata/n:Identity/@Version" value="${product.version}">
       <namespaces>
-        <namespace prefix="n" uri="http://schemas.microsoft.com/developer/vsx-schema/2010" />
+        <namespace prefix="n" uri="http://schemas.microsoft.com/developer/vsx-schema/2011" />
       </namespaces>
     </xmlpoke>
-    <xmlpoke file="${root.dir}\src\Spring.VisualStudio\source.extension.vsixmanifest" xpath="/n:Vsix/n:Identifier/n:Description" value="${product.description}">
+    <xmlpoke file="${root.dir}\src\Spring.VisualStudio\source.extension.vsixmanifest" xpath="/n:PackageManifest/n:Metadata/n:Description" value="${product.description}">
       <namespaces>
-        <namespace prefix="n" uri="http://schemas.microsoft.com/developer/vsx-schema/2010" />
+        <namespace prefix="n" uri="http://schemas.microsoft.com/developer/vsx-schema/2011" />
       </namespaces>
     </xmlpoke>
   </target>

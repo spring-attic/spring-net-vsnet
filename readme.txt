@@ -1,22 +1,17 @@
-Spring.NET Visual Studio 2010 Extension, Release 1.0.2 (February 20, 2012)
---------------------------------------------------------------------------
+Spring.NET Visual Studio 2012 Extension, Release 1.0.0 (TO BE DEFINED)
+----------------------------------------------------------------------
 http://www.springframework.net/vsaddin/
 
 
 1. INTRODUCTION
 
-The 1.0.2 release of Spring.NET Visual Studio 2010 Extension provides intellisence assistance in authoring Spring XML configuration files
+The 1.0.0 release of Spring.NET Visual Studio 2012 Extension provides intellisence assistance in authoring Spring XML configuration files
 	* Type completion
 	* Property name completion
 	* Constructor argument name completion
 	* Property value completion for property of type 'Type', 'Enum' and 'Boolean'
 	* Snippets integration (inline or by menu)
 	* Quickinfo tooltip for properties and types
-
-
-2. SUPPORTED VISUAL STUDIO VERSIONS
-
-Visual Studio 2010
 
 
 3. KNOWN ISSUES
@@ -37,7 +32,7 @@ Spring.NET Visual Studio Extension is released under the terms of the Apache Sof
 
 5. HOW TO BUILD
 
-There is a Visual Studio 2010 solution file to build and debug the extension (Requires VS2010 SDK).
+There is a Visual Studio 2012 solution file to build and debug the extension (Requires VS2012 SDK).
 WARNING: You CANNOT build the extension if a previous version is installed. 
 Uninstall any copy of the extension before building the solution or running project's build script(s).
 
@@ -58,7 +53,7 @@ or feature request, please submit a ticket in JIRA (see link above).
 Follow us on Twitter @SpringForNet
 
 
-7. Contributing to Spring.NET Visual Studio 2010 Extension
+7. Contributing to Spring.NET Visual Studio 2012 Extension
 
 Github is for social coding: if you want to write code, we encourage contributions through pull requests from forks of this repository (see http://help.github.com/forking/). 
 Before we accept a non-trivial patch or pull request we will need you to sign the contributor's agreement (see https://support.springsource.com/spring_committer_signup). 

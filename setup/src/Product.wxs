@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="$(var.ProductCode)" Name="$(var.ProductFullName)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.ProductCompany)" UpgradeCode="84e1611f-5ee0-46a8-bef2-4a64c284247c">
+  <Product Id="$(var.ProductCode)" Name="$(var.ProductFullName)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.ProductCompany)" UpgradeCode="07af5e3d-97d2-481c-835e-9db9a9c4074d">
     <Package InstallerVersion="200" Compressed="yes" Comments="$(var.ProductDescription)" />
 
     <Media Id="1" Cabinet="Spring.VisualStudio.cab" EmbedCab="yes" />
@@ -9,10 +9,10 @@
 
 
     <Property Id="VSROOTREG">
-      <RegistrySearch Id="VSRootRegistry" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\10.0\Setup\VS" Name="ProductDir" Type="directory" />
+      <RegistrySearch Id="VSRootRegistry" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\11.0\Setup\VS" Name="ProductDir" Type="directory" />
     </Property>
     <Property Id="VSINSTALLREG">
-      <RegistrySearch Id="VSInstallRegistry" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\10.0" Name="InstallDir" Type="directory" />
+      <RegistrySearch Id="VSInstallRegistry" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\11.0" Name="InstallDir" Type="directory" />
     </Property>
     <!-- Install for all users -->
     <Property Id="ALLUSERS">2</Property>
@@ -22,7 +22,7 @@
 
 
     <!-- Launch conditions -->
-    <Condition Message="This setup requires Microsoft Visual Studio 2010.">VSINSTALLREG OR Installed</Condition>
+    <Condition Message="This setup requires Microsoft Visual Studio 2012.">VSINSTALLREG OR Installed</Condition>
 
 
     <Directory Id="TARGETDIR" Name="SourceDir">
@@ -30,7 +30,7 @@
       <Directory Id="VSINSTALLDIR" Name="VsInstallDir">
         <!-- Extension install folder (All Users) -->
         <Directory Id="ExtensionsDirectory" Name="Extensions">
-          <Directory Id="CompanyDirectoryr" Name="$(var.ProductCompany)">
+          <Directory Id="CompanyDirectory" Name="$(var.ProductCompany)">
             <Directory Id="ProductNameDirectory" Name="$(var.ProductName)">
               <Directory Id="VSEXTENSIONDIR" Name="$(var.ProductVersion)">
               </Directory>

@@ -1,15 +1,4 @@
-SPRING.NET VISUAL STUDIO 2010 EXTENSION CHANGELOG
+SPRING.NET VISUAL STUDIO 2012 EXTENSION CHANGELOG
 =================================================
 http://www.springframework.net/vsaddin/
 
-Release Version 1.0.2 February 20, 2012
-
-Bug
-[SPRNETVSADDIN-5] - Visual studio locks dlls of referenced projects which make the build failed
-
-
-*******************************************************************************
-Release Version 1.0.1 July 28, 2011
-
-Bug
-[SPRNETVSADDIN-2] - Property name completion does not work for types in a referenced library or project.
