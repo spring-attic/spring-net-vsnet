@@ -7,13 +7,6 @@
 
     <MajorUpgrade DowngradeErrorMessage="A later version of this Product is already installed. Setup will now exit." />
 
-
-    <Property Id="VSROOTREG">
-      <RegistrySearch Id="VSRootRegistry" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\11.0\Setup\VS" Name="ProductDir" Type="directory" />
-    </Property>
-    <Property Id="VSINSTALLREG">
-      <RegistrySearch Id="VSInstallRegistry" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\11.0" Name="InstallDir" Type="directory" />
-    </Property>
     <!-- Install for all users -->
     <Property Id="ALLUSERS">2</Property>
     <!-- Add/Remove Programs properties -->
@@ -22,25 +15,27 @@
 
 
     <!-- Launch conditions -->
-    <Condition Message="This setup requires Microsoft Visual Studio 2012.">VSINSTALLREG OR Installed</Condition>
+    <PropertyRef Id="VS2012DEVENV" />
+    <Condition Message="This setup requires Microsoft Visual Studio 2012.">VS2012DEVENV OR Installed</Condition>
 
 
+    <PropertyRef Id="VS2012_EXTENSIONS_DIR" />
+    <PropertyRef Id="VS2012_ROOT_FOLDER" />
+    
     <Directory Id="TARGETDIR" Name="SourceDir">
 
-      <Directory Id="VSINSTALLDIR" Name="VsInstallDir">
-        <!-- Extension install folder (All Users) -->
-        <Directory Id="ExtensionsDirectory" Name="Extensions">
-          <Directory Id="CompanyDirectory" Name="$(var.ProductCompany)">
-            <Directory Id="ProductNameDirectory" Name="$(var.ProductName)">
-              <Directory Id="VSEXTENSIONDIR" Name="$(var.ProductVersion)">
-              </Directory>
+      <!-- Extension install folder (All Users) -->
+      <Directory Id="VS2012_EXTENSIONS_DIR" Name="Extensions">
+        <Directory Id="CompanyDirectory" Name="$(var.ProductCompany)">
+          <Directory Id="ProductNameDirectory" Name="$(var.ProductName)">
+            <Directory Id="VSEXTENSIONDIR" Name="$(var.ProductVersion)">
             </Directory>
           </Directory>
         </Directory>
       </Directory>
 
-      <Directory Id="VSROOTDIR" Name="VsRootDir">
-        <!-- Xml schemas install folder -->
+      <!-- Root install folder -->
+      <Directory Id="VS2012_ROOT_FOLDER" Name="Microsoft Visual Studio 11.0">
         <Directory Id="XmlDirectory" Name="Xml">
           <Directory Id="VSSCHEMASDIR" Name="Schemas">
           </Directory>
@@ -50,27 +45,14 @@
     </Directory>
 
 
-
-    <CustomAction Id="CA_VSROOTDIR" Return="check" Execute="firstSequence" Property="VSROOTDIR" Value="[VSROOTREG]" />
-    <CustomAction Id="CA_VSINSTALLDIR" Return="check" Execute="firstSequence" Property="VSINSTALLDIR" Value="[VSINSTALLREG]" />
-
-
     <Feature Id="ProductFeature" Title="$(var.ProductName)" Level="1">
       <ComponentGroupRef Id="Extension"/>
       <ComponentGroupRef Id="Schemas"/>
     </Feature>
 
-
-    <InstallUISequence>
-      <LaunchConditions After="AppSearch" />
-      <Custom Action="CA_VSROOTDIR" After="ValidateProductID">VSROOTDIR=""</Custom>
-      <Custom Action="CA_VSINSTALLDIR" After="CA_VSROOTDIR">VSINSTALLDIR=""</Custom>
-    </InstallUISequence>
-
     <InstallExecuteSequence>
       <LaunchConditions After="AppSearch" />
-      <Custom Action="CA_VSROOTDIR" After="ValidateProductID">VSROOTDIR=""</Custom>
-      <Custom Action="CA_VSINSTALLDIR" After="CA_VSROOTDIR">VSINSTALLDIR=""</Custom>
+      <Custom Action="VS2012Setup" Before="InstallFinalize"><![CDATA[&ProductFeature > 1]]></Custom>
     </InstallExecuteSequence>
 
     <Icon Id="Product.ico" SourceFile="Resources\Product.ico" />
