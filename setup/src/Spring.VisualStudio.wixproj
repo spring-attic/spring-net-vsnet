@@ -3,12 +3,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>3.5</ProductVersion>
+    <ProductVersion>3.8</ProductVersion>
     <ProjectGuid>{171fd88b-f45b-409e-beff-28109d618edb}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>Spring.VisualStudio</OutputName>
     <OutputType>Package</OutputType>
-    <WixToolPath>$(NAntRootPath)\setup\lib\WiX\3.5.2430.0\</WixToolPath>
+    <WixToolPath>$(NAntRootPath)\setup\lib\WiX\3.8.1128.0\</WixToolPath>
     <WixTargetsPath>$(WixToolPath)Wix.targets</WixTargetsPath>
     <WixTasksPath>$(WixToolPath)wixtasks.dll</WixTasksPath>
     <DefineSolutionProperties>False</DefineSolutionProperties>
