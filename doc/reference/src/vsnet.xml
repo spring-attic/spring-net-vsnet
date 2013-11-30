@@ -229,7 +229,7 @@
   </sect1>
 
   <sect1>
-    <title>Snippits integration</title>
+    <title>Snippets integration</title>
 
     <para>Code Snippets are a feature of VS.NET that provide structure to help
     you fill in common code/configuration tasks In the previous sections we
@@ -239,11 +239,11 @@
     to create a definition of an often used object such as
     VariablePlaceholderConfigurer. If you open up the Code Snippips manager
     (<emphasis role="bold">CTRL+K+B</emphasis>) you will see the list of
-    installed snippits as shown below</para>
+    installed snippets as shown below</para>
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="images/codesnippits-1.png"></imagedata>
+        <imagedata fileref="images/codesnippets-1.png"></imagedata>
       </imageobject>
     </mediaobject>
 
@@ -255,7 +255,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="images/snippits-1.png"></imagedata>
+        <imagedata fileref="images/snippets-1.png"></imagedata>
       </imageobject>
     </mediaobject>
 
@@ -264,7 +264,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="images/snippits-2.png"></imagedata>
+        <imagedata fileref="images/snippets-2.png"></imagedata>
       </imageobject>
     </mediaobject>
 
@@ -277,7 +277,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="images/snippits-3.png"></imagedata>
+        <imagedata fileref="images/snippets-3.png"></imagedata>
       </imageobject>
     </mediaobject>
 
@@ -290,7 +290,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="images/snippits-4.png"></imagedata>
+        <imagedata fileref="images/snippets-4.png"></imagedata>
       </imageobject>
     </mediaobject>
 
