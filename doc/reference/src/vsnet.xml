@@ -8,7 +8,7 @@
   <title>Using the Spring.NET Visual Studio Extension</title>
 
   <para>The Spring Extension provides IntelliSense assistance in authoring
-  Spring XML configuration files in Visual Studio .NET 2012. It provides the
+  Spring XML configuration files in Visual Studio .NET. It provides the
   following features:</para>
 
   <para><itemizedlist>
@@ -56,7 +56,7 @@
     <para>To install the extension double click on the
     Spring.VisualStudio-1.0.0.msi file after unzipping the distribution. The
     installation will not prompt you for any information. Once the install
-    screen is gone, start up VS.NET 2012. In VS.NET if you select
+    screen is gone, start up VS.NET. In VS.NET if you select
     "Help-&gt;About Visual Studio you will see an entry in the installed
     products window named "Spring.NET Visual Studio Extension 1.0.0". You will
     also be able to see it listed under the Tools-&gt;Extension Manager Window
