@@ -1,5 +1,5 @@
-Spring.NET Visual Studio 2012 Extension, Release 1.0.0 (TO BE DEFINED)
-----------------------------------------------------------------------
+Spring.NET Visual Studio 2012 Extension, Release 1.0.0 (December 2, 2013)
+-------------------------------------------------------------------------
 http://www.springframework.net/vsaddin/
 
 
@@ -16,7 +16,7 @@ The 1.0.0 release of Spring.NET Visual Studio 2012 Extension provides intellisen
 
 3. KNOWN ISSUES
 
-None
+	* Conflicts with ReSharper
 
 
 4. RELEASE INFO

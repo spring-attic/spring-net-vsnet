@@ -2,3 +2,4 @@ SPRING.NET VISUAL STUDIO 2012 EXTENSION CHANGELOG
 =================================================
 http://www.springframework.net/vsaddin/
 
+Release Version 1.0.0 December 2, 2013
