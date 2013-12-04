@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="$(var.ProductCode)" Name="$(var.ProductFullName)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.ProductCompany)" UpgradeCode="07af5e3d-97d2-481c-835e-9db9a9c4074d">
+  <Product Id="$(var.ProductCode)" Name="$(var.ProductFullName)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.ProductCompany)" UpgradeCode="9a9c4074-a7d2-281c-635e-07af5e3d9dbd">
     <Package InstallerVersion="200" Compressed="yes" Comments="$(var.ProductDescription)" />
 
     <Media Id="1" Cabinet="Spring.VisualStudio.cab" EmbedCab="yes" />
@@ -15,17 +15,17 @@
 
 
     <!-- Launch conditions -->
-    <PropertyRef Id="VS2012DEVENV" />
-    <Condition Message="This setup requires Microsoft Visual Studio 2012.">VS2012DEVENV OR Installed</Condition>
+    <PropertyRef Id="VS2013DEVENV" />
+    <Condition Message="This setup requires Microsoft Visual Studio 2013.">VS2013DEVENV OR Installed</Condition>
 
 
-    <PropertyRef Id="VS2012_EXTENSIONS_DIR" />
-    <PropertyRef Id="VS2012_ROOT_FOLDER" />
+    <PropertyRef Id="VS2013_EXTENSIONS_DIR" />
+    <PropertyRef Id="VS2013_ROOT_FOLDER" />
     
     <Directory Id="TARGETDIR" Name="SourceDir">
 
       <!-- Extension install folder (All Users) -->
-      <Directory Id="VS2012_EXTENSIONS_DIR" Name="Extensions">
+      <Directory Id="VS2013_EXTENSIONS_DIR" Name="Extensions">
         <Directory Id="CompanyDirectory" Name="$(var.ProductCompany)">
           <Directory Id="ProductNameDirectory" Name="$(var.ProductName)">
             <Directory Id="VSEXTENSIONDIR" Name="$(var.ProductVersion)">
@@ -35,7 +35,7 @@
       </Directory>
 
       <!-- Root install folder -->
-      <Directory Id="VS2012_ROOT_FOLDER" Name="Microsoft Visual Studio 11.0">
+      <Directory Id="VS2013_ROOT_FOLDER" Name="Microsoft Visual Studio 11.0">
         <Directory Id="XmlDirectory" Name="Xml">
           <Directory Id="VSSCHEMASDIR" Name="Schemas">
           </Directory>
@@ -52,7 +52,7 @@
 
     <InstallExecuteSequence>
       <LaunchConditions After="AppSearch" />
-      <Custom Action="VS2012Setup" Before="InstallFinalize"><![CDATA[&ProductFeature > 1]]></Custom>
+      <Custom Action="VS2013Setup" Before="InstallFinalize"><![CDATA[&ProductFeature > 1]]></Custom>
     </InstallExecuteSequence>
 
     <Icon Id="Product.ico" SourceFile="Resources\Product.ico" />

@@ -26,9 +26,9 @@ namespace Spring.VisualStudio
 {
     static class GuidList
     {
-        public const string guidPackagePkgString = "11d948f0-ba16-4557-920e-c37436a0204b";
-        public const string guidPackageCmdSetString = "9eb89028-d74c-42fe-a8a7-eb0cc4e7f6d5";
-        public const string guidSpringLanguageString = "418f0bdf-4d69-4581-b97c-84fbbf099dbe";
+        public const string guidPackagePkgString = "74c5b464-a256-494b-9ea9-9d7c749426d8";
+        public const string guidPackageCmdSetString = "8b9a5afe-dd75-4ecb-b7ea-ebd869cf64da";
+        public const string guidSpringLanguageString = "c85f7ec6-2963-4115-abf4-dfb9f131e945";
 
         public static readonly Guid guidPackageCmdSet = new Guid(guidPackageCmdSetString);
         public static readonly Guid guidSpringLanguage = new Guid(guidSpringLanguageString);

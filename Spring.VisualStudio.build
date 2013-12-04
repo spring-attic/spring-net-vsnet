@@ -3,7 +3,7 @@
    
   <property name="datetime.now" value="${datetime::now()}" />
   
-  <property name="visualstudio" value="2012" />
+  <property name="visualstudio" value="2013" />
   <property name="product.name" value="Spring.NET Visual Studio ${visualstudio} Extension" />
   <property name="product.company" value="SpringSource" />
   <property name="product.copyright" value="Copyright 2004-${datetime::get-year(datetime.now)} ${product.company}" />
@@ -12,13 +12,13 @@
   
   <property name="product.version" value="1.0.0" />
   <!-- Update ${product.code} when ${product.version} changes -->
-  <property name="product.code" value="590d76ee-3100-4eea-9995-ba2df453b566" />
+  <property name="product.code" value="df45593b-1300-7eea-9b95-0d76eeba2566" />
   <!-- alpha / beta# / rc# -->
   <property name="product.releasetype" value="" />
   <property name="product.fullname" value="${product.name} ${product.version}" if="${(product.releasetype == '')}" />
   <property name="product.fullname" value="${product.name} ${product.version} (${product.releasetype})" if="${(product.releasetype != '')}" />
 
-  <property name="project.buildnumber" value="${math::abs(math::floor(timespan::get-total-days(datetime::now() - datetime::parse('11/01/2013'))))}" />
+  <property name="project.buildnumber" value="${math::abs(math::floor(timespan::get-total-days(datetime::now() - datetime::parse('12/01/2013'))))}" />
   <property name="project.version" value="${product.version}.${project.buildnumber}" overwrite="false" />
   <property name="project.buildconfiguration" value="Debug" />
   <property name="project.buildtype" value="dev" />

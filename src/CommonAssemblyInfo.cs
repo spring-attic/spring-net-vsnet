@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 
 [assembly: CLSCompliantAttribute(false)]
 [assembly: ComVisibleAttribute(false)]
-[assembly: AssemblyProductAttribute("Spring.NET Visual Studio 2012 Extension 1.0.0")]
+[assembly: AssemblyProductAttribute("Spring.NET Visual Studio 2013 Extension 1.0.0")]
 [assembly: AssemblyCompanyAttribute("http://www.springframework.net/")]
 [assembly: AssemblyCopyrightAttribute("Copyright 2004-2013 SpringSource")]
 [assembly: AssemblyTrademarkAttribute("Apache License, Version 2.0")]
