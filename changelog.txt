@@ -1,3 +1,5 @@
 SPRING.NET VISUAL STUDIO 2013 EXTENSION CHANGELOG
 =================================================
 http://www.springframework.net/vsaddin/
+
+Release Version 1.0.0 December 9, 2013

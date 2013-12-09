@@ -1,5 +1,5 @@
-Spring.NET Visual Studio 2013 Extension, Release 1.0.0 (TO BE DEFINED)
-----------------------------------------------------------------------
+Spring.NET Visual Studio 2013 Extension, Release 1.0.0 (December 9, 2013)
+-------------------------------------------------------------------------
 http://www.springframework.net/vsaddin/
 
 
