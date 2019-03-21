@@ -39,7 +39,7 @@ Uninstall any copy of the extension before building the solution or running proj
 
 6. Support
 
-The user forums at http://forum.springframework.net/ are available for you to submit questions, support requests, and interact with other Spring.NET users.
+The user forums at https://forum.springframework.net/ are available for you to submit questions, support requests, and interact with other Spring.NET users.
 
 Bug, issue and project tracking can be found at https://jira.springsource.org/browse/SPRNETVSADDIN
 
@@ -55,7 +55,7 @@ Follow us on Twitter @SpringForNet
 
 7. Contributing to Spring.NET Visual Studio 2013 Extension
 
-Github is for social coding: if you want to write code, we encourage contributions through pull requests from forks of this repository (see http://help.github.com/forking/). 
+Github is for social coding: if you want to write code, we encourage contributions through pull requests from forks of this repository (see https://help.github.com/forking/). 
 Before we accept a non-trivial patch or pull request we will need you to sign the contributor's agreement (see https://support.springsource.com/spring_committer_signup). 
 Signing the contributor's agreement does not grant anyone commit rights to the main repository, but it does mean that we can accept your contributions, and you will get an author credit if we do. 
 Active contributors might be asked to join the core team, and given the ability to merge pull requests.
